@@ -28,27 +28,26 @@ async function transcriber(audio) {
 async function summarize(text) {
   const prompt = `Por favor, resuma o texto a seguir destacando dois tópicos: \"Visão Geral\" e \"Pontos Principais\". Confira o texto: \"${text}\".`;
   const data = {
+    model: 'gpt-4o-mini',
     messages: [
       {
         role: 'user',
         content: prompt,
       },
     ],
-    model: 'gpt-4o-mini',
-    response_format: { type: 'json_object' },
     max_completion_tokens: 300,
   };
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
-    body: data,
+    body: JSON.stringify(data),
     headers: {
       Authorization: `Bearer ${API_KEY}`,
+      'Content-Type': 'application/json',
     },
   });
 
-  const summary = await response.json();
-  console.log(summary);
+  return await response.json();
 }
 
 async function startRecording() {
@@ -66,16 +65,20 @@ async function startRecording() {
 
     mediaRecorder.onstop = async () => {
       console.log('Gravação finalizada.');
+
       const audioBlob = new Blob(audiosChunks, { type: 'audio/wav' });
       const audioURL = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioURL);
 
-      document.write('Transcrevendo...');
+      document.write('Transcrevendo... ');
       audio.play();
 
-      const transcription = await transcriber(audioBlob);
-      console.log(transcription);
-      document.write(transcription.text);
+      const { text } = await transcriber(audioBlob);
+      const response = await summarize(text);
+      const [{ message }] = response.choices;
+      const summary = message.content;
+
+      document.write(summary);
 
       audiosChunks = [];
     };
@@ -93,8 +96,10 @@ const btnTest = document.querySelector('.btn-test');
 btnStart.addEventListener('click', () => startRecording());
 btnStop.addEventListener('click', () => mediaRecorder.stop());
 
-btnTest.addEventListener('click', () => {
-  summarize(
+btnTest.addEventListener('click', async () => {
+  const response = await summarize(
     'Meu nome é Gabriel e estou trabalhando nesse projeto o dia inteiro. O projeto que estamos trabalhando é muito importante para o cliente. Por favor, vamos nos esforçar.',
   );
+  const [{ message }] = response.choices;
+  console.log(message.content);
 });
