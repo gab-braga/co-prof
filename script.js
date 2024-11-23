@@ -91,15 +91,6 @@ async function startRecording() {
 
 const btnStart = document.querySelector('.btn-start');
 const btnStop = document.querySelector('.btn-stop');
-const btnTest = document.querySelector('.btn-test');
 
 btnStart.addEventListener('click', () => startRecording());
 btnStop.addEventListener('click', () => mediaRecorder.stop());
-
-btnTest.addEventListener('click', async () => {
-  const response = await summarize(
-    'Meu nome é Gabriel e estou trabalhando nesse projeto o dia inteiro. O projeto que estamos trabalhando é muito importante para o cliente. Por favor, vamos nos esforçar.',
-  );
-  const [{ message }] = response.choices;
-  console.log(message.content);
-});
