@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "scss": "sass --watch ./src/scss/custom.scss ./src/css/bootstrap.css"
+    "scss": "sass --watch src/scss/bootstrap.scss src/css/bootstrap.css"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
