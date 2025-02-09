@@ -1,7 +1,10 @@
 import React from 'react';
 import CoProfIcon from '../assets/co-prof-blue.svg';
+import { Link, NavLink } from 'react-router-dom';
 
 export default () => {
+  const [logged] = React.useState(false);
+
   return (
     <header className="py-2">
       <nav
@@ -40,17 +43,40 @@ export default () => {
               ></button>
             </div>
             <div className="offcanvas-body">
-              <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li className="nav-item">
-                  <a className="nav-link text-primary fs-5" href="#">
-                    Home
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link text-primary fs-5" href="#">
-                    Link
-                  </a>
-                </li>
+              <ul className="navbar-nav justify-content-end align-items-md-center flex-grow-1 pe-3">
+                {logged ? (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link text-primary fs-5" to="/">
+                        Home
+                      </NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link text-primary fs-5"
+                        to="/account"
+                      >
+                        Conta
+                      </NavLink>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="nav-item">
+                      <Link
+                        className="btn btn-outline-primary mb-3 mb-md-0 me-md-3"
+                        to="/signin"
+                      >
+                        Login
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="btn bg-gradient-blue" to="/signup">
+                        Cadastre-se
+                      </Link>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           </div>

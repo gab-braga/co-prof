@@ -5,6 +5,7 @@ $gradient-blue: linear-gradient(135deg, #37a0c6 25%, #1b4d60 76%);
 }
 
 .btn.bg-gradient-blue {
+  line-height: 1.62 !important;
   border: none !important;
   color: #ffffff !important;
 }

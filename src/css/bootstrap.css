@@ -9902,6 +9902,7 @@ textarea.form-control-lg {
 }
 
 .btn.bg-gradient-blue {
+  line-height: 1.62 !important;
   border: none !important;
   color: #ffffff !important;
 }
