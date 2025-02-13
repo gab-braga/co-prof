@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './pages/Layout';
 import Home from './pages/Home';
+import Login from './pages/Login';
 
 export default () => {
   return (
@@ -10,6 +11,7 @@ export default () => {
         <Route path="/" element={<Layout />}>
           <Route path="" element={<Home />} />
         </Route>
+        <Route path="/signin" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

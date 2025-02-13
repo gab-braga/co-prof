@@ -19,7 +19,7 @@ export default () => {
       </div>
 
       <div className="bg-gradient-blue rounded-3 p-4 p-lg-5 mb-3 mt-5">
-        <span className="text-center fs-1 text-white">
+        <span className="text-center fs-2 text-white">
           Melhore o <strong>Aproveitamento</strong> das suas aulas.{' '}
           <strong>Automatize</strong> geração de resumos com <strong>IA</strong>
           !
