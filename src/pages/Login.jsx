@@ -2,12 +2,24 @@ import React from 'react';
 import Background from '../assets/background01.png';
 import CoProfIcon from '../assets/co-prof-square.svg';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { EMAIL_REGEX } from '../utils/regex';
 
 export default () => {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+
+  async function onSubmit(data) {
+    console.log(data);
+  }
+
   return (
     <div className="min-vh-100 row p-3" style={{ '--bs-gutter-x': '0' }}>
       <div
-        className="d-none d-md-block rounded-3 overflow-hidden col-md-6 p-0"
+        className="d-none d-md-block rounded-3 overflow-hidden col-md-6 col-lg-8 p-0"
         style={{
           backgroundImage: `url('${Background}')`,
           backgroundPosition: 'center',
@@ -19,14 +31,14 @@ export default () => {
           style={{ opacity: '50%' }}
         ></div>
       </div>
-      <div className="col-12 col-md-6 px-4 py-5">
-        <div className="d-flex align-items-center gap-3">
+      <div className="col-12 col-md-6 col-lg-4 px-sm-4 py-5">
+        <div className="d-flex flex-wrap align-items-center gap-3">
           <img src={CoProfIcon} alt="CoProf" />
           <h1 className="ff-poppins m-0">Login</h1>
         </div>
 
-        <form className="mt-5">
-          <span className="text-">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
+          <span>
             Ainda não tem conta? <Link to="/signup">Cadastre-se</Link>
           </span>
 
@@ -34,14 +46,48 @@ export default () => {
             <label htmlFor="email" className="form-label">
               E-mail
             </label>
-            <input type="text" id="email" className="form-control" />
+            <input
+              {...register('email', {
+                required: {
+                  value: true,
+                  message: 'Por favor, preencha com seu e-mail.',
+                },
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: 'E-mail inválido. Verifique e tente novamente.',
+                },
+              })}
+              type="text"
+              id="email"
+              className={
+                errors.email ? 'form-control is-invalid' : 'form-control'
+              }
+            />
+            {errors.email && (
+              <div class="invalid-feedback">{errors.email?.message}</div>
+            )}
           </div>
 
           <div className="form-group mt-3">
             <label htmlFor="senha" className="form-label">
               Senha
             </label>
-            <input type="password" id="senha" className="form-control" />
+            <input
+              {...register('password', {
+                required: {
+                  value: true,
+                  message: 'Por favor, preencha com sua senha.',
+                },
+              })}
+              type="password"
+              id="senha"
+              className={
+                errors.password ? 'form-control is-invalid' : 'form-control'
+              }
+            />
+            {errors.password && (
+              <div class="invalid-feedback">{errors.password?.message}</div>
+            )}
           </div>
 
           <button className="w-100 btn bg-gradient-blue mt-4">Entrar</button>
