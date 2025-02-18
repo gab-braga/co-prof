@@ -11,7 +11,9 @@
     "scss": "sass --watch src/scss/bootstrap.scss src/css/bootstrap.css"
   },
   "dependencies": {
+    "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
+    "firebase": "^11.3.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.2",

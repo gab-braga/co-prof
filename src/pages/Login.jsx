@@ -1,9 +1,10 @@
 import React from 'react';
 import Background from '../assets/background01.png';
 import CoProfIcon from '../assets/co-prof-square.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
+import { login } from '../firebase/auth';
 
 export default () => {
   const {
@@ -11,9 +12,11 @@ export default () => {
     register,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   async function onSubmit(data) {
-    console.log(data);
+    await login(data);
+    navigate('/');
   }
 
   return (
