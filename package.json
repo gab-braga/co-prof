@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "deploy": "firebase deploy",
     "scss": "sass --watch src/scss/bootstrap.scss src/css/bootstrap.css"
   },
   "dependencies": {
