@@ -1,9 +1,11 @@
 import React from 'react';
 import Background from '../assets/background02.png';
 import CoProfIcon from '../assets/co-prof-square.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
+import toast, { Toaster } from 'react-hot-toast';
+import { createUser, login } from '../firebase/auth';
 
 export default () => {
   const {
@@ -11,9 +13,21 @@ export default () => {
     register,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
-  async function onSubmit(data) {
-    console.log(data);
+  function onSubmit(data) {
+    toast.promise(
+      async () => {
+        await createUser(data);
+        await login(data);
+        navigate('/');
+      },
+      {
+        loading: 'Carregando..',
+        error: 'Algo deu errado. Verifique e tente novamente.',
+        success: null,
+      },
+    );
   }
 
   return (
@@ -31,6 +45,7 @@ export default () => {
           style={{ opacity: '50%' }}
         ></div>
       </div>
+
       <div className="col-12 col-md-6 col-lg-4 px-sm-4 py-5">
         <div className="d-flex flex-wrap align-items-center gap-3">
           <img src={CoProfIcon} alt="CoProf" />
@@ -123,6 +138,8 @@ export default () => {
           <button className="w-100 btn bg-gradient-blue mt-4">Cadastrar</button>
         </form>
       </div>
+
+      <Toaster />
     </div>
   );
 };

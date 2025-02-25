@@ -1,8 +1,18 @@
 import axios from 'axios';
 import app from './app';
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
+import api from '../api/api';
 
 const auth = getAuth(app);
+
+async function createUser(data) {
+  await api.post('/users', data);
+}
 
 async function login({ email, password }) {
   const { user } = await signInWithEmailAndPassword(auth, email, password);
@@ -15,4 +25,4 @@ async function logout() {
   localStorage.removeItem('token');
 }
 
-export { login, logout };
+export { createUser, login, logout };

@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
 import { login } from '../firebase/auth';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default () => {
   const {
@@ -15,8 +16,17 @@ export default () => {
   const navigate = useNavigate();
 
   async function onSubmit(data) {
-    await login(data);
-    navigate('/');
+    toast.promise(
+      async () => {
+        await login(data);
+        navigate('/');
+      },
+      {
+        loading: 'Carregando..',
+        error: 'E-mail ou senha incorretos.',
+        success: null,
+      },
+    );
   }
 
   return (
@@ -34,6 +44,7 @@ export default () => {
           style={{ opacity: '50%' }}
         ></div>
       </div>
+
       <div className="col-12 col-md-6 col-lg-4 px-sm-4 py-5">
         <div className="d-flex flex-wrap align-items-center gap-3">
           <img src={CoProfIcon} alt="CoProf" />
@@ -100,6 +111,8 @@ export default () => {
           <Link to="/signin">Esqueci minha senha</Link>
         </div>
       </div>
+
+      <Toaster />
     </div>
   );
 };
