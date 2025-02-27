@@ -81,7 +81,7 @@ export default () => {
               }
             />
             {errors.name && (
-              <div class="invalid-feedback">{errors.name?.message}</div>
+              <div className="invalid-feedback">{errors.name?.message}</div>
             )}
           </div>
 
@@ -107,7 +107,7 @@ export default () => {
               }
             />
             {errors.email && (
-              <div class="invalid-feedback">{errors.email?.message}</div>
+              <div className="invalid-feedback">{errors.email?.message}</div>
             )}
           </div>
 
@@ -133,7 +133,7 @@ export default () => {
               }
             />
             {errors.password && (
-              <div class="invalid-feedback">{errors.password?.message}</div>
+              <div className="invalid-feedback">{errors.password?.message}</div>
             )}
           </div>
 

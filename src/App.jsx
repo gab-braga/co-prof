@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Layout from './pages/Layout';
+import PrivateRoutes from './routes/PrivateRoutes';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -12,12 +12,13 @@ export default () => {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="" element={<Home />} />
-            <Route path="classes" element={<Classes />} />
-          </Route>
+          <Route path="/" element={<Home />} />
           <Route path="/signin" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+
+          <Route element={<PrivateRoutes />}>
+            <Route path="/classes" element={<Classes />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

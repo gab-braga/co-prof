@@ -1,25 +1,34 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { firebaseLogin, firebaseLogout } from '../firebase/auth';
 
 const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
-  const [logged, setLogged] = useState(false);
+  const [isLoadding, setIsLoadding] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   async function login(data) {
     const token = await firebaseLogin(data);
     localStorage.setItem('token', token);
-    setLogged(true);
+    setIsAuthenticated(true);
   }
 
   async function logout() {
     await firebaseLogout();
     localStorage.removeItem('token');
-    setLogged(false);
+    setIsAuthenticated(false);
   }
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) setIsAuthenticated(true);
+    setIsLoadding(false);
+  }, []);
+
+  if (isLoadding) return <div>Carregando...</div>;
+
   return (
-    <AuthContext.Provider value={{ logged, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

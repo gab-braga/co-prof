@@ -1,9 +1,10 @@
 import React from 'react';
 import CoProfIcon from '../assets/co-prof-blue.svg';
 import { Link, NavLink } from 'react-router-dom';
+import { useAuth } from '../context/authContext';
 
 export default () => {
-  const [logged] = React.useState(false);
+  const { isAuthenticated } = useAuth();
 
   return (
     <header className="py-2">
@@ -44,11 +45,14 @@ export default () => {
             </div>
             <div className="offcanvas-body">
               <ul className="navbar-nav justify-content-end align-items-md-center flex-grow-1 pe-3">
-                {logged ? (
+                {isAuthenticated ? (
                   <>
                     <li className="nav-item">
-                      <NavLink className="nav-link text-primary fs-5" to="/">
-                        Home
+                      <NavLink
+                        className="nav-link text-primary fs-5"
+                        to="/classes"
+                      >
+                        Turmas
                       </NavLink>
                     </li>
                     <li className="nav-item">
