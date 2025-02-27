@@ -2,9 +2,23 @@ import React from 'react';
 import CoProfIcon from '../assets/co-prof-blue.svg';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
+import toast from 'react-hot-toast';
 
 export default () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
+
+  function handleLogout() {
+    toast.promise(
+      async () => {
+        await logout();
+      },
+      {
+        loading: 'Carregando..',
+        error: 'Algo deu errado. Verifique e tente novamente.',
+        success: null,
+      },
+    );
+  }
 
   return (
     <header className="py-2">
@@ -62,6 +76,14 @@ export default () => {
                       >
                         Conta
                       </NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <button
+                        onClick={handleLogout}
+                        className="nav-link text-primary fs-5"
+                      >
+                        Sair
+                      </button>
                     </li>
                   </>
                 ) : (

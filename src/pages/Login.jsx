@@ -4,7 +4,7 @@ import CoProfIcon from '../assets/co-prof-square.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/authContext';
 
 export default () => {
@@ -112,8 +112,6 @@ export default () => {
           <Link to="/signin">Esqueci minha senha</Link>
         </div>
       </div>
-
-      <Toaster />
     </div>
   );
 };

@@ -4,7 +4,7 @@ import CoProfIcon from '../assets/co-prof-square.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { createUser } from '../services/userService';
 import { useAuth } from '../context/authContext';
 
@@ -140,8 +140,6 @@ export default () => {
           <button className="w-100 btn bg-gradient-blue mt-4">Cadastrar</button>
         </form>
       </div>
-
-      <Toaster />
     </div>
   );
 };

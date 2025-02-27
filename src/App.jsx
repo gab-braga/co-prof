@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Classes from './pages/Classes';
 import AuthProvider from './context/authContext';
+import { Toaster } from 'react-hot-toast';
 
 export default () => {
   return (
@@ -21,6 +22,7 @@ export default () => {
           </Route>
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </AuthProvider>
   );
 };
