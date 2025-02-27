@@ -5,7 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
 import toast, { Toaster } from 'react-hot-toast';
-import { createUser, login } from '../firebase/auth';
+import { createUser } from '../services/userService';
+import { useAuth } from '../context/authContext';
 
 export default () => {
   const {
@@ -14,13 +15,14 @@ export default () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   function onSubmit(data) {
     toast.promise(
       async () => {
         await createUser(data);
         await login(data);
-        navigate('/');
+        navigate('/classes');
       },
       {
         loading: 'Carregando..',

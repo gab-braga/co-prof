@@ -4,8 +4,8 @@ import CoProfIcon from '../assets/co-prof-square.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
-import { login } from '../firebase/auth';
 import toast, { Toaster } from 'react-hot-toast';
+import { useAuth } from '../context/authContext';
 
 export default () => {
   const {
@@ -14,12 +14,13 @@ export default () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   async function onSubmit(data) {
     toast.promise(
       async () => {
         await login(data);
-        navigate('/');
+        navigate('/classes');
       },
       {
         loading: 'Carregando..',
