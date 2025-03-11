@@ -7,6 +7,7 @@ import { EMAIL_REGEX } from '../utils/regex';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/authContext';
 import GoogleIcon from '../assets/google.svg';
+import ForgotPasswordModal from '../components/ForgotPasswordModal';
 
 export default () => {
   const {
@@ -120,7 +121,14 @@ export default () => {
         </form>
 
         <div className="text-end mt-3">
-          <Link to="/signin">Esqueci minha senha</Link>
+          <button
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#forgotPasswordModal"
+            className="btn btn-link"
+          >
+            Esqueci minha senha
+          </button>
         </div>
 
         <button
@@ -131,6 +139,8 @@ export default () => {
           Entrar com Google
         </button>
       </div>
+
+      <ForgotPasswordModal />
     </div>
   );
 };

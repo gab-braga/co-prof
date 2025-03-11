@@ -3,6 +3,7 @@ import app from './app';
 import {
   getAuth,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -27,4 +28,8 @@ async function firebaseLogout() {
   await signOut(auth);
 }
 
-export { firebaseLogin, firebaseLoginGoogle, firebaseLogout };
+async function resetPassword(email) {
+  await sendPasswordResetEmail(auth, email);
+}
+
+export { firebaseLogin, firebaseLoginGoogle, firebaseLogout, resetPassword };
