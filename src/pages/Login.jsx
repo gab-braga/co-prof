@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/authContext';
+import GoogleIcon from '../assets/google.svg';
 
 export default () => {
   const {
@@ -14,7 +15,7 @@ export default () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, loginGoogle } = useAuth();
 
   async function onSubmit(data) {
     toast.promise(
@@ -28,6 +29,16 @@ export default () => {
         success: null,
       },
     );
+  }
+
+  async function handleLoginGoogle() {
+    try {
+      await loginGoogle();
+      navigate('/classes');
+    } catch (error) {
+      console.error(error);
+      toast.error('Autenticação falhou. Tente novamente.');
+    }
   }
 
   return (
@@ -111,6 +122,14 @@ export default () => {
         <div className="text-end mt-3">
           <Link to="/signin">Esqueci minha senha</Link>
         </div>
+
+        <button
+          onClick={handleLoginGoogle}
+          className="btn btn-light w-100 d-flex gap-2 justify-content-center align-items-center mt-3"
+        >
+          <img src={GoogleIcon} alt="Ícone Google" />
+          Entrar com Google
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { firebaseLogin, firebaseLogout } from '../firebase/auth';
+import {
+  firebaseLogin,
+  firebaseLoginGoogle,
+  firebaseLogout,
+} from '../firebase/auth';
 
 const AuthContext = createContext();
 
@@ -9,6 +13,12 @@ export default function AuthProvider({ children }) {
 
   async function login(data) {
     const token = await firebaseLogin(data);
+    localStorage.setItem('token', token);
+    setIsAuthenticated(true);
+  }
+
+  async function loginGoogle() {
+    const token = await firebaseLoginGoogle();
     localStorage.setItem('token', token);
     setIsAuthenticated(true);
   }
@@ -28,7 +38,9 @@ export default function AuthProvider({ children }) {
   if (isLoadding) return <div>Carregando...</div>;
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, login, loginGoogle, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
