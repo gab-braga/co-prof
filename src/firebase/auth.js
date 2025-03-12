@@ -28,8 +28,13 @@ async function firebaseLogout() {
   await signOut(auth);
 }
 
-async function resetPassword(email) {
+async function firebaseResetPassword(email) {
   await sendPasswordResetEmail(auth, email);
 }
 
-export { firebaseLogin, firebaseLoginGoogle, firebaseLogout, resetPassword };
+export {
+  firebaseLogin,
+  firebaseLoginGoogle,
+  firebaseLogout,
+  firebaseResetPassword,
+};

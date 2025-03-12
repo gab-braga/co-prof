@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
-import { resetPassword } from '../firebase/auth';
+import { firebaseResetPassword } from '../firebase/auth';
 import toast from 'react-hot-toast';
 
 export default () => {
@@ -17,14 +17,17 @@ export default () => {
     if (modalElement) {
       const modal = window.bootstrap.Modal.getInstance(modalElement);
       if (modal) {
-        try {
-          await resetPassword(data.email);
-          modal.hide();
-          toast.success('E-mail enviado!');
-        } catch (error) {
-          console.log(error);
-          toast.error('Algo deu errado. Tente novamente.');
-        }
+        toast.promise(
+          async () => {
+            await firebaseResetPassword(data.email);
+            modal.hide();
+          },
+          {
+            loading: 'Carregando...',
+            success: 'E-mail enviado!',
+            error: 'Algo deu errado. Tente novamente.',
+          },
+        );
       }
     }
   }
