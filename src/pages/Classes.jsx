@@ -1,5 +1,6 @@
 import React from 'react';
 import PanelHeader from '../components/PanelHeader';
+import ClassCard from '../components/ClassCard';
 
 export default () => {
   return (
@@ -16,12 +17,11 @@ export default () => {
             </div>
           </div>
 
-          <div className="mt-4">
-            <p>1</p>
-            <p>2</p>
-            <p>3</p>
-            <p>4</p>
-            <p>5</p>
+          <div className="mt-4 row">
+            <ClassCard className="col-12 col-md-6 col-lg-4 col-xl-3" />
+            <ClassCard className="col-12 col-md-6 col-lg-4 col-xl-3" />
+            <ClassCard className="col-12 col-md-6 col-lg-4 col-xl-3" />
+            <ClassCard className="col-12 col-md-6 col-lg-4 col-xl-3" />
           </div>
         </div>
       </div>
