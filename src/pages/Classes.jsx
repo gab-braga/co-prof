@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PanelHeader from '../components/PanelHeader';
 import ClassCard from '../components/ClassCard';
+import { findAllClasses } from '../services/classService';
 
 export default () => {
+  const [classes, setClasses] = useState([]);
+
+  async function loadingData() {
+    const data = await findAllClasses();
+    setClasses(data);
+  }
+
+  useEffect(() => {
+    loadingData();
+  }, []);
+
   return (
     <div className="min-vh-100 d-flex flex-column gradient-blue-to-top">
       <PanelHeader />
@@ -18,10 +30,13 @@ export default () => {
           </div>
 
           <div className="mt-4 row">
-            <ClassCard className="col-12 col-md-6 col-lg-4 col-xl-3" />
-            <ClassCard className="col-12 col-md-6 col-lg-4 col-xl-3" />
-            <ClassCard className="col-12 col-md-6 col-lg-4 col-xl-3" />
-            <ClassCard className="col-12 col-md-6 col-lg-4 col-xl-3" />
+            {classes.map((data) => (
+              <ClassCard
+                key={data.id}
+                {...data}
+                className="col-12 col-md-6 col-lg-4 col-xl-3"
+              />
+            ))}
           </div>
         </div>
       </div>
