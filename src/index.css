@@ -1,0 +1,16 @@
+.gradient-blue-to-top {
+  position: relative;
+}
+
+.gradient-blue-to-top::before {
+  content: '';
+  width: 100%;
+  height: 40vh;
+  min-height: 300px;
+  max-height: 400px;
+  background-image: linear-gradient(135deg, #37a0c6 25%, #1b4d60 76%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}

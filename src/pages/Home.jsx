@@ -1,11 +1,11 @@
 import React from 'react';
 import IllustrationEducator from '../assets/illustration_educator.svg';
-import Header from '../components/Header';
+import HomeHeader from '../components/HomeHeader';
 
 export default () => {
   return (
     <div className="min-vh-100 d-flex flex-column">
-      <Header />
+      <HomeHeader />
 
       <div className="container flex-grow-1">
         <div className="d-flex flex-column flex-lg-row justify-content-lg-between align-items-lg-center gap-4 mt-4">

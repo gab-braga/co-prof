@@ -27,10 +27,10 @@ export default () => {
         aria-label="Menu Lateral"
       >
         <div className="container-fluid">
-          <a href="/" className="navbar-brand d-flex align-items-center gap-3">
+          <Link to="/" className="navbar-brand d-flex align-items-center gap-3">
             <img src={CoProfIcon} alt="CoProf" />
             <h1 className="m-0 text-primary ff-poppins">CoProf</h1>
-          </a>
+          </Link>
           <button
             className="navbar-toggler border-0 shadow-none"
             type="button"
@@ -63,7 +63,7 @@ export default () => {
                   <>
                     <li className="nav-item">
                       <NavLink
-                        className="nav-link text-primary fs-5"
+                        className="nav-link fs-5 text-primary"
                         to="/classes"
                       >
                         Turmas
@@ -71,7 +71,7 @@ export default () => {
                     </li>
                     <li className="nav-item">
                       <NavLink
-                        className="nav-link text-primary fs-5"
+                        className="nav-link fs-5 text-primary"
                         to="/account"
                       >
                         Conta
@@ -80,7 +80,7 @@ export default () => {
                     <li className="nav-item">
                       <button
                         onClick={handleLogout}
-                        className="nav-link text-primary fs-5"
+                        className="nav-link fs-5 text-primary"
                       >
                         Sair
                       </button>
@@ -97,7 +97,7 @@ export default () => {
                       </Link>
                     </li>
                     <li className="nav-item">
-                      <Link className="btn bg-gradient-blue" to="/signup">
+                      <Link className="btn btn-primary" to="/signup">
                         Cadastre-se
                       </Link>
                     </li>
