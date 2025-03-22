@@ -1,10 +1,9 @@
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { EMAIL_REGEX } from '../utils/regex';
-import { firebaseResetPassword } from '../firebase/auth';
 import toast from 'react-hot-toast';
+import { createClass } from '../services/classService';
 
-export default () => {
+export default ({ updateClasses }) => {
   const modalRef = useRef(null);
   const {
     handleSubmit,
@@ -13,6 +12,10 @@ export default () => {
     formState: { errors },
   } = useForm();
 
+  function executeUpdate() {
+    if (typeof updateClasses === "function") updateClasses();
+  }
+
   async function onSubmit(data) {
     const modalElement = modalRef.current;
     if (modalElement) {
@@ -20,14 +23,15 @@ export default () => {
       if (modal) {
         toast.promise(
           async () => {
-            await firebaseResetPassword(data.email);
+            await createClass(data);
             reset();
+            executeUpdate();
             modal.hide();
           },
           {
             loading: 'Carregando...',
-            success: 'E-mail enviado!',
-            error: 'Algo deu errado. Tente novamente.',
+            success: 'Nova turma cadastrada.',
+            error: 'Algo deu errado. Tente novamente mais tarde.',
           },
         );
       }
@@ -38,16 +42,16 @@ export default () => {
     <div
       ref={modalRef}
       className="modal fade"
-      id="forgotPasswordModal"
+      id="createClassModal"
       tabIndex="-1"
-      aria-labelledby="forgotPasswordModalLabel"
+      aria-labelledby="createClassModalLabel"
       aria-hidden="true"
     >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h2 className="modal-title fs-5" id="forgotPasswordModalLabel">
-              Recuperação de Senha
+            <h2 className="modal-title fs-5" id="createClassModalLabel">
+              Nova Turma
             </h2>
             <button
               type="button"
@@ -59,30 +63,55 @@ export default () => {
           <div className="modal-body">
             <form onSubmit={handleSubmit(onSubmit)} id="forgot-password-form">
               <div className="form-group mt-3">
-                <label htmlFor="emailRecovery" className="form-label">
-                  Digite seu e-mail para recuperar senha
+                <label htmlFor="name" className="form-label">
+                  Digite o nome da turma
                 </label>
                 <input
-                  {...register('email', {
+                  {...register('name', {
                     required: {
                       value: true,
-                      message: 'Por favor, preencha com seu e-mail.',
+                      message: 'Por favor, preencha com o nome da turma (Ex: Inglês Instrumental).',
                     },
-                    pattern: {
-                      value: EMAIL_REGEX,
-                      message: 'E-mail inválido. Verifique e tente novamente.',
-                    },
+                    maxLength: {
+                      value: 100,
+                      message: 'Limite máximo de 100 caracteres.',
+                    }
                   })}
                   type="text"
-                  id="emailRecovery"
+                  id="name"
                   autoComplete='off'
                   className={
-                    errors.email ? 'form-control is-invalid' : 'form-control'
+                    errors.name ? 'form-control is-invalid' : 'form-control'
                   }
                 />
-                {errors.email && (
+                {errors.name && (
                   <div className="invalid-feedback">
-                    {errors.email?.message}
+                    {errors.name?.message}
+                  </div>
+                )}
+              </div>
+
+              <div className="form-group mt-3">
+                <label htmlFor="section" className="form-label">
+                  Digite a seção da turma
+                </label>
+                <input
+                  {...register('section', {
+                    maxLength: {
+                      value: 100,
+                      message: 'Limite máximo de 100 caracteres.',
+                    }
+                  })}
+                  type="text"
+                  id="section"
+                  autoComplete='off'
+                  className={
+                    errors.section ? 'form-control is-invalid' : 'form-control'
+                  }
+                />
+                {errors.section && (
+                  <div className="invalid-feedback">
+                    {errors.section?.message}
                   </div>
                 )}
               </div>
@@ -97,7 +126,7 @@ export default () => {
               Fechar
             </button>
             <button form="forgot-password-form" className="btn btn-primary">
-              Enviar
+              Criar
             </button>
           </div>
         </div>
