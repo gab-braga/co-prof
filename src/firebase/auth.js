@@ -1,8 +1,8 @@
-import axios from 'axios';
 import app from './app';
 import {
   getAuth,
   GoogleAuthProvider,
+  onIdTokenChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -12,16 +12,12 @@ import {
 const auth = getAuth(app);
 
 async function firebaseLogin({ email, password }) {
-  const { user } = await signInWithEmailAndPassword(auth, email, password);
-  const token = await user.getIdToken();
-  return token;
+  await signInWithEmailAndPassword(auth, email, password);
 }
 
 async function firebaseLoginGoogle() {
   const provider = new GoogleAuthProvider();
-  const { user } = await signInWithPopup(auth, provider);
-  const token = await user.getIdToken();
-  return token;
+  await signInWithPopup(auth, provider);
 }
 
 async function firebaseLogout() {
@@ -32,9 +28,25 @@ async function firebaseResetPassword(email) {
   await sendPasswordResetEmail(auth, email);
 }
 
+function firebaseObserveTokenChanges(handleChangeToken, handleError = () => { }) {
+  return onIdTokenChanged(
+    auth,
+    async (user) => {
+      if (user) {
+        const token = await user.getIdToken();
+        handleChangeToken(token);
+      } else {
+        handleChangeToken(null);
+      }
+    },
+    handleError
+  );
+}
+
 export {
   firebaseLogin,
   firebaseLoginGoogle,
   firebaseLogout,
   firebaseResetPassword,
+  firebaseObserveTokenChanges
 };

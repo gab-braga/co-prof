@@ -3,39 +3,54 @@ import {
   firebaseLogin,
   firebaseLoginGoogle,
   firebaseLogout,
+  firebaseObserveTokenChanges,
 } from '../firebase/auth';
 
 const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
-  const [isLoadding, setIsLoadding] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   async function login(data) {
-    const token = await firebaseLogin(data);
-    localStorage.setItem('token', token);
-    setIsAuthenticated(true);
+    await firebaseLogin(data);
   }
 
   async function loginGoogle() {
-    const token = await firebaseLoginGoogle();
-    localStorage.setItem('token', token);
-    setIsAuthenticated(true);
+    await firebaseLoginGoogle();
   }
 
   async function logout() {
     await firebaseLogout();
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
+  }
+
+  function handleTokenChanges() {
+    return firebaseObserveTokenChanges(
+      (token) => {
+        if (token) {
+          localStorage.setItem('token', token);
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('token');
+          setIsAuthenticated(false);
+        }
+        setIsLoading(false);
+      },
+      (error) => {
+        console.error(error);
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+        setIsLoading(false);
+      }
+    );
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) setIsAuthenticated(true);
-    setIsLoadding(false);
+    const unsubscribe = handleTokenChanges();
+    return () => unsubscribe();
   }, []);
 
-  if (isLoadding) return <div>Carregando...</div>;
+  if (isLoading) return <div>Carregando...</div>;
 
   return (
     <AuthContext.Provider
