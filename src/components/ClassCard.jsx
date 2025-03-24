@@ -1,15 +1,24 @@
 import React from 'react';
+import UpdateClassModal from './UpdateClassModal';
 
-export default ({ id, name, section, className,  ...rest }) => {
+export default ({ id, name, section, className, handleUpdates, ...rest }) => {
   return (
     <div id={id} className={className} {...rest}>
       <div className="border border-2 border-primary p-3 rounded mt-4">
         <div className="d-flex flex-column" style={{ minHeight: '150px' }}>
           <div className="d-flex justify-content-between align-items-center">
             <h3 className="fs-5 text-truncate">{name || '...'}</h3>
-            <button className="btn fs-4 border-0 p-0">
-              <i className="bi bi-three-dots-vertical"></i>
-            </button>
+            <div className="dropdown">
+              <button type="type" data-bs-toggle="dropdown" className="btn fs-5 border-0 p-0">
+                <i className="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul className="dropdown-menu">
+                <li>
+                  <button className="btn dropdown-item" type="button" data-bs-toggle="modal" data-bs-target={`#update-class-modal-${id}`}>Editar</button>
+                  <button className="btn dropdown-item">Excluir</button>
+                </li>
+              </ul>
+            </div>
           </div>
           <span className="fs-6 text-secondary text-truncate">
             {section || '...'}
@@ -20,6 +29,8 @@ export default ({ id, name, section, className,  ...rest }) => {
           </div>
         </div>
       </div>
+
+      <UpdateClassModal id={id} handleUpdates={handleUpdates} />
     </div>
   );
 };

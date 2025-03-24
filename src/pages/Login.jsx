@@ -124,7 +124,7 @@ export default () => {
           <button
             type="button"
             data-bs-toggle="modal"
-            data-bs-target="#forgotPasswordModal"
+            data-bs-target="#forgot-password-modal"
             className="btn btn-link"
           >
             Esqueci minha senha

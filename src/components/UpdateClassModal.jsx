@@ -1,10 +1,12 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { createClass } from '../services/classService';
+import { findClass, updateClass } from '../services/classService';
 
-export default ({ handleUpdates }) => {
+export default ({ id, handleUpdates }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const modalRef = useRef(null);
+
   const {
     handleSubmit,
     register,
@@ -23,14 +25,14 @@ export default ({ handleUpdates }) => {
       if (modal) {
         toast.promise(
           async () => {
-            await createClass(data);
+            await updateClass(id, data);
             reset();
             executeUpdates();
             modal.hide();
           },
           {
             loading: 'Carregando...',
-            success: 'Nova turma cadastrada.',
+            success: 'Alterações concluídas.',
             error: 'Algo deu errado. Tente novamente mais tarde.',
           },
         );
@@ -38,20 +40,36 @@ export default ({ handleUpdates }) => {
     }
   }
 
+  async function loadData() {
+    setIsLoading(true);
+    try {
+      const data = await findClass(id);
+      reset(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadData();
+  }, [id]);
+
   return (
     <div
       ref={modalRef}
       className="modal fade"
-      id="create-class-modal"
+      id={`update-class-modal-${id}`}
       tabIndex="-1"
-      aria-labelledby="create-class-modal-label"
+      aria-labelledby={`update-class-modal-label-${id}`}
       aria-hidden="true"
     >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h2 className="modal-title fs-5" id="create-class-modal-label">
-              Nova Turma
+            <h2 className="modal-title fs-5" id={`update-class-modal-label-${id}`}>
+              Editar Turma
             </h2>
             <button
               type="button"
@@ -61,12 +79,13 @@ export default ({ handleUpdates }) => {
             ></button>
           </div>
           <div className="modal-body">
-            <form onSubmit={handleSubmit(onSubmit)} id="create-class-form">
+            <form onSubmit={handleSubmit(onSubmit)} id={`update-class-form-${id}`}>
               <div className="form-group mt-3">
-                <label htmlFor="name" className="form-label">
+                <label htmlFor={`name-${id}`} className="form-label">
                   Digite o nome da turma
                 </label>
                 <input
+                  disabled={isLoading}
                   {...register('name', {
                     required: {
                       value: true,
@@ -78,7 +97,7 @@ export default ({ handleUpdates }) => {
                     }
                   })}
                   type="text"
-                  id="name"
+                  id={`name-${id}`}
                   autoComplete='off'
                   className={
                     errors.name ? 'form-control is-invalid' : 'form-control'
@@ -92,10 +111,11 @@ export default ({ handleUpdates }) => {
               </div>
 
               <div className="form-group mt-3">
-                <label htmlFor="section" className="form-label">
+                <label htmlFor={`section-${id}`} className="form-label">
                   Digite a seção da turma
                 </label>
                 <input
+                  disabled={isLoading}
                   {...register('section', {
                     maxLength: {
                       value: 100,
@@ -103,7 +123,7 @@ export default ({ handleUpdates }) => {
                     }
                   })}
                   type="text"
-                  id="section"
+                  id={`section-${id}`}
                   autoComplete='off'
                   className={
                     errors.section ? 'form-control is-invalid' : 'form-control'
@@ -125,8 +145,8 @@ export default ({ handleUpdates }) => {
             >
               Fechar
             </button>
-            <button form="create-class-form" className="btn btn-primary">
-              Criar
+            <button form={`update-class-form-${id}`} className="btn btn-primary">
+              Editar
             </button>
           </div>
         </div>

@@ -24,4 +24,12 @@ async function findClass(id) {
   return response.data;
 }
 
-export { createClass, findAllClasses, findClass };
+async function updateClass(id, data) {
+  const token = localStorage.getItem('token');
+  const response = await api.put(`/classes/${id}`, data, {
+    headers: { Authorization: token },
+  });
+  return response.data;
+}
+
+export { createClass, findAllClasses, findClass, updateClass };

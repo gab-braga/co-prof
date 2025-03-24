@@ -38,15 +38,15 @@ export default () => {
     <div
       ref={modalRef}
       className="modal fade"
-      id="forgotPasswordModal"
+      id="forgot-password-modal"
       tabIndex="-1"
-      aria-labelledby="forgotPasswordModalLabel"
+      aria-labelledby="forgot-password-modal-label"
       aria-hidden="true"
     >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h2 className="modal-title fs-5" id="forgotPasswordModalLabel">
+            <h2 className="modal-title fs-5" id="forgot-password-modal-label">
               Recuperação de Senha
             </h2>
             <button

@@ -26,7 +26,7 @@ export default () => {
             <h2 className="fs-4">Turmas</h2>
             <div className="d-flex gap-3 flex-wrap">
               <button className="btn btn-secondary">Importar Turmas</button>
-              <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createClassModal">Nova Turma</button>
+              <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-class-modal">Nova Turma</button>
             </div>
           </div>
 
@@ -35,6 +35,7 @@ export default () => {
               <ClassCard
                 key={id}
                 {...{ id, name, section }}
+                handleUpdates={loadingData}
                 className="col-12 col-md-6 col-lg-4 col-xl-3"
               />
             ))}
