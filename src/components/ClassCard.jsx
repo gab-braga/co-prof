@@ -1,5 +1,6 @@
 import React from 'react';
 import UpdateClassModal from './UpdateClassModal';
+import ConfirmDeleteClassModal from './ConfirmDeleteClassModal';
 
 export default ({ id, name, section, className, handleUpdates, ...rest }) => {
   return (
@@ -9,13 +10,31 @@ export default ({ id, name, section, className, handleUpdates, ...rest }) => {
           <div className="d-flex justify-content-between align-items-center">
             <h3 className="fs-5 text-truncate">{name || '...'}</h3>
             <div className="dropdown">
-              <button type="type" data-bs-toggle="dropdown" className="btn fs-5 border-0 p-0">
+              <button
+                type="type"
+                data-bs-toggle="dropdown"
+                className="btn fs-5 border-0 p-0"
+              >
                 <i className="bi bi-three-dots-vertical"></i>
               </button>
               <ul className="dropdown-menu">
                 <li>
-                  <button className="btn dropdown-item" type="button" data-bs-toggle="modal" data-bs-target={`#update-class-modal-${id}`}>Editar</button>
-                  <button className="btn dropdown-item">Excluir</button>
+                  <button
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target={`#update-class-modal-${id}`}
+                    className="btn dropdown-item"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target={`#confirm-delete-class-modal-${id}`}
+                    className="btn dropdown-item"
+                  >
+                    Excluir
+                  </button>
                 </li>
               </ul>
             </div>
@@ -31,6 +50,7 @@ export default ({ id, name, section, className, handleUpdates, ...rest }) => {
       </div>
 
       <UpdateClassModal id={id} handleUpdates={handleUpdates} />
+      <ConfirmDeleteClassModal id={id} handleUpdates={handleUpdates} />
     </div>
   );
 };

@@ -32,4 +32,12 @@ async function updateClass(id, data) {
   return response.data;
 }
 
-export { createClass, findAllClasses, findClass, updateClass };
+async function deleteClass(id) {
+  const token = localStorage.getItem('token');
+  const response = await api.delete(`/classes/${id}`, {
+    headers: { Authorization: token },
+  });
+  return response.data;
+}
+
+export { createClass, findAllClasses, findClass, updateClass, deleteClass };
