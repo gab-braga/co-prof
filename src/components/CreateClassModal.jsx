@@ -13,7 +13,7 @@ export default ({ handleUpdates }) => {
   } = useForm();
 
   function executeUpdates() {
-    if (typeof handleUpdates === "function") handleUpdates();
+    if (typeof handleUpdates === 'function') handleUpdates();
   }
 
   async function onSubmit(data) {
@@ -65,29 +65,30 @@ export default ({ handleUpdates }) => {
               <div className="form-group mt-3">
                 <label htmlFor="name" className="form-label">
                   Digite o nome da turma
+                  <span className="text-danger">*</span>
                 </label>
                 <input
                   {...register('name', {
                     required: {
                       value: true,
-                      message: 'Por favor, preencha com o nome da turma (Ex: Inglês Instrumental).',
+                      message:
+                        'Por favor, preencha com o nome da turma (Ex: Inglês Instrumental).',
                     },
                     maxLength: {
                       value: 100,
                       message: 'Limite máximo de 100 caracteres.',
-                    }
+                    },
                   })}
                   type="text"
                   id="name"
-                  autoComplete='off'
+                  autoComplete="off"
+                  placeholder="Nome da turma"
                   className={
                     errors.name ? 'form-control is-invalid' : 'form-control'
                   }
                 />
                 {errors.name && (
-                  <div className="invalid-feedback">
-                    {errors.name?.message}
-                  </div>
+                  <div className="invalid-feedback">{errors.name?.message}</div>
                 )}
               </div>
 
@@ -100,11 +101,12 @@ export default ({ handleUpdates }) => {
                     maxLength: {
                       value: 100,
                       message: 'Limite máximo de 100 caracteres.',
-                    }
+                    },
                   })}
                   type="text"
                   id="section"
-                  autoComplete='off'
+                  autoComplete="off"
+                  placeholder="Seção da turma"
                   className={
                     errors.section ? 'form-control is-invalid' : 'form-control'
                   }

@@ -93,7 +93,7 @@ export default () => {
                         className="btn btn-outline-primary mb-3 mb-md-0 me-md-3"
                         to="/signin"
                       >
-                        Login
+                        Entrar
                       </Link>
                     </li>
                     <li className="nav-item">

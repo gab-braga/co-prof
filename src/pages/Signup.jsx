@@ -62,6 +62,7 @@ export default () => {
           <div className="form-group mt-3">
             <label htmlFor="name" className="form-label">
               Nome
+              <span className="text-danger">*</span>
             </label>
             <input
               {...register('name', {
@@ -76,6 +77,7 @@ export default () => {
               })}
               type="text"
               id="name"
+              placeholder="Digite seu nome completo"
               className={
                 errors.name ? 'form-control is-invalid' : 'form-control'
               }
@@ -88,6 +90,7 @@ export default () => {
           <div className="form-group mt-3">
             <label htmlFor="email" className="form-label">
               E-mail
+              <span className="text-danger">*</span>
             </label>
             <input
               {...register('email', {
@@ -106,6 +109,7 @@ export default () => {
               })}
               type="text"
               id="email"
+              placeholder="Digite seu e-mail"
               className={
                 errors.email ? 'form-control is-invalid' : 'form-control'
               }
@@ -118,6 +122,7 @@ export default () => {
           <div className="form-group mt-3">
             <label htmlFor="senha" className="form-label">
               Senha
+              <span className="text-danger">*</span>
             </label>
             <input
               {...register('password', {
@@ -132,6 +137,7 @@ export default () => {
               })}
               type="password"
               id="password"
+              placeholder="Digite sua senha"
               className={
                 errors.password ? 'form-control is-invalid' : 'form-control'
               }

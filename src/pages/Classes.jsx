@@ -5,11 +5,19 @@ import { findAllClasses } from '../services/classService';
 import CreateClassModal from '../components/CreateClassModal';
 
 export default () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [classes, setClasses] = useState([]);
 
   async function loadingData() {
-    const data = await findAllClasses();
-    setClasses(data);
+    setIsLoading(true);
+    try {
+      const data = await findAllClasses();
+      setClasses(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -27,6 +35,7 @@ export default () => {
         >
           <div className="d-flex gap-2 flex-wrap justify-content-between align-items-center">
             <h2 className="fs-4">Turmas</h2>
+
             <div className="d-flex gap-3 flex-wrap">
               <button className="btn btn-secondary">Importar Turmas</button>
               <button
@@ -39,16 +48,26 @@ export default () => {
             </div>
           </div>
 
-          <div className="mt-4 row">
-            {classes.map(({ id, name, section }) => (
-              <ClassCard
-                key={id}
-                {...{ id, name, section }}
-                handleUpdates={loadingData}
-                className="col-12 col-md-6 col-lg-4 col-xl-3"
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <p className="fw-medium mt-4" style={{ color: '#8a8a8a' }}>
+              Carregando...
+            </p>
+          ) : !classes || classes.length == 0 ? (
+            <p className="fw-medium mt-4" style={{ color: '#8a8a8a' }}>
+              Nenhuma turma cadastrada.
+            </p>
+          ) : (
+            <div className="mt-4 row">
+              {classes.map(({ id, name, section }) => (
+                <ClassCard
+                  key={id}
+                  {...{ id, name, section }}
+                  handleUpdates={loadingData}
+                  className="col-12 col-md-6 col-lg-4 col-xl-3"
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

@@ -15,7 +15,7 @@ export default ({ id, handleUpdates }) => {
   } = useForm();
 
   function executeUpdates() {
-    if (typeof handleUpdates === "function") handleUpdates();
+    if (typeof handleUpdates === 'function') handleUpdates();
   }
 
   async function onSubmit(data) {
@@ -68,7 +68,10 @@ export default ({ id, handleUpdates }) => {
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h2 className="modal-title fs-5" id={`update-class-modal-label-${id}`}>
+            <h2
+              className="modal-title fs-5"
+              id={`update-class-modal-label-${id}`}
+            >
               Editar Turma
             </h2>
             <button
@@ -79,34 +82,38 @@ export default ({ id, handleUpdates }) => {
             ></button>
           </div>
           <div className="modal-body">
-            <form onSubmit={handleSubmit(onSubmit)} id={`update-class-form-${id}`}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              id={`update-class-form-${id}`}
+            >
               <div className="form-group mt-3">
                 <label htmlFor={`name-${id}`} className="form-label">
                   Digite o nome da turma
+                  <span className="text-danger">*</span>
                 </label>
                 <input
                   disabled={isLoading}
                   {...register('name', {
                     required: {
                       value: true,
-                      message: 'Por favor, preencha com o nome da turma (Ex: Inglês Instrumental).',
+                      message:
+                        'Por favor, preencha com o nome da turma (Ex: Inglês Instrumental).',
                     },
                     maxLength: {
                       value: 100,
                       message: 'Limite máximo de 100 caracteres.',
-                    }
+                    },
                   })}
                   type="text"
                   id={`name-${id}`}
-                  autoComplete='off'
+                  autoComplete="off"
+                  placeholder="Nome da turma"
                   className={
                     errors.name ? 'form-control is-invalid' : 'form-control'
                   }
                 />
                 {errors.name && (
-                  <div className="invalid-feedback">
-                    {errors.name?.message}
-                  </div>
+                  <div className="invalid-feedback">{errors.name?.message}</div>
                 )}
               </div>
 
@@ -120,11 +127,12 @@ export default ({ id, handleUpdates }) => {
                     maxLength: {
                       value: 100,
                       message: 'Limite máximo de 100 caracteres.',
-                    }
+                    },
                   })}
                   type="text"
                   id={`section-${id}`}
-                  autoComplete='off'
+                  autoComplete="off"
+                  placeholder="Seção da turma"
                   className={
                     errors.section ? 'form-control is-invalid' : 'form-control'
                   }
@@ -145,7 +153,10 @@ export default ({ id, handleUpdates }) => {
             >
               Fechar
             </button>
-            <button form={`update-class-form-${id}`} className="btn btn-primary">
+            <button
+              form={`update-class-form-${id}`}
+              className="btn btn-primary"
+            >
               Editar
             </button>
           </div>
