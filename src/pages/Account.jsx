@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import PanelHeader from '../components/PanelHeader';
-import { getAuthenticatedUser, updateUser } from '../services/userService';
+import {
+  getAuthenticatedUser,
+  updateUser,
+  updateUserPassword,
+} from '../services/userService';
 import { useForm } from 'react-hook-form';
 import { EMAIL_REGEX } from '../utils/regex';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/authContext';
+import { useNavigate } from 'react-router-dom';
 
 export default () => {
   return (
@@ -54,7 +59,7 @@ function FormAccess() {
     formState: { errors },
   } = useForm();
 
-  async function onSubmit(data) {
+  function onSubmit(data) {
     toast.promise(
       async () => {
         await updateUser(data);
@@ -103,6 +108,7 @@ function FormAccess() {
               message: 'Limite máximo de 250 caracteres.',
             },
           })}
+          autoComplete="off"
           type="text"
           id="name"
           className={errors.name ? 'form-control is-invalid' : 'form-control'}
@@ -132,6 +138,7 @@ function FormAccess() {
               message: 'E-mail inválido. Verifique e tente novamente.',
             },
           })}
+          autoComplete="off"
           type="text"
           id="email"
           className={errors.email ? 'form-control is-invalid' : 'form-control'}
@@ -152,44 +159,26 @@ function FormPassword() {
   const {
     handleSubmit,
     register,
-    reset,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
-  async function onSubmit(data) {
-    console.log(data);
+  function onSubmit(data) {
+    toast.promise(
+      async () => {
+        await updateUserPassword(data);
+        navigate('/signin');
+      },
+      {
+        loading: 'Carregando...',
+        success: 'Senha atualizada.',
+        error: 'Algo deu errado. Tente novamente mais tarde.',
+      },
+    );
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="form-group mt-3">
-        <label htmlFor="current-password" className="form-label">
-          Senha Atual
-        </label>
-        <input
-          {...register('currentPassword', {
-            required: {
-              value: true,
-              message: 'Por favor, preencha com sua senha atual.',
-            },
-            maxLength: {
-              value: 50,
-              message: 'Limite máximo de 50 caracteres.',
-            },
-          })}
-          type="password"
-          id="current-password"
-          className={
-            errors.currentPassword ? 'form-control is-invalid' : 'form-control'
-          }
-        />
-        {errors.currentPassword && (
-          <div className="invalid-feedback">
-            {errors.currentPassword?.message}
-          </div>
-        )}
-      </div>
-
       <div className="form-group mt-3">
         <label htmlFor="new-password" className="form-label">
           Nova Senha
@@ -213,6 +202,34 @@ function FormPassword() {
         />
         {errors.newPassword && (
           <div className="invalid-feedback">{errors.newPassword?.message}</div>
+        )}
+      </div>
+
+      <div className="form-group mt-3">
+        <label htmlFor="confirm-password" className="form-label">
+          Confirmar Senha
+        </label>
+        <input
+          {...register('confirmPassword', {
+            required: {
+              value: true,
+              message: 'Por favor, preencha novamente com sua nova senha.',
+            },
+            maxLength: {
+              value: 50,
+              message: 'Limite máximo de 50 caracteres.',
+            },
+          })}
+          type="password"
+          id="confirm-password"
+          className={
+            errors.confirmPassword ? 'form-control is-invalid' : 'form-control'
+          }
+        />
+        {errors.confirmPassword && (
+          <div className="invalid-feedback">
+            {errors.confirmPassword?.message}
+          </div>
         )}
       </div>
 
