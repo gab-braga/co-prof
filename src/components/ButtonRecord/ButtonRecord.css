@@ -1,0 +1,18 @@
+.button-record {
+  --btn-size: 60px;
+  --scale-size: 1;
+  --pulse-size: 0px;
+
+  width: var(--btn-size) !important;
+  height: var(--btn-size) !important;
+  min-width: var(--btn-size) !important;
+  min-height: var(--btn-size) !important;
+
+  border: none !important;
+  border-radius: 50% !important;
+  background-color: #ed3535 !important;
+  transition: all 0.5s ease-in-out !important;
+
+  transform: scale(var(--scale-size));
+  box-shadow: 0px 0px 0px var(--pulse-size) rgba(0, 0, 0, 0.2);
+}

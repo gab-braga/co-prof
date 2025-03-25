@@ -1,14 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import PanelHeader from '../components/PanelHeader';
-import ClassCard from '../components/ClassCard';
 import { findClass } from '../services/classService';
 import CreateClassModal from '../components/CreateClassModal';
 import { Link, useParams } from 'react-router-dom';
+import ButtonRecord from '../components/ButtonRecord/ButtonRecord';
+
+let interval = null;
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
   const [classData, setClassData] = useState({});
+  const [isRecording, setIsRecording] = useState(false);
+  const [pulse, setPulse] = useState(0);
   const { id } = useParams();
+
+  function startRecording() {
+    if (!isRecording) {
+      setIsRecording(true);
+      interval = setInterval(() => {
+        const value = Math.ceil(Math.random() * 30);
+        setPulse(value);
+      }, 500);
+    } else {
+      setIsRecording(false);
+      if (interval) clearInterval(interval);
+      setPulse(0);
+    }
+  }
 
   async function loadingData() {
     setIsLoading(true);
@@ -24,6 +42,10 @@ export default () => {
 
   useEffect(() => {
     loadingData();
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -64,14 +86,17 @@ export default () => {
               >
                 <div className="w-100 d-flex flex-column gap-2 justify-content-center align-items-center">
                   <h3 className="fs-5">Iniciar Gravação</h3>
-                  <div
-                    className="rounded-circle bg-danger"
-                    style={{ width: '60px', height: '60px' }}
-                  ></div>
+                  <div className="p-4">
+                    <ButtonRecord
+                      onClick={startRecording}
+                      isRecording={isRecording}
+                      pulse={pulse}
+                    />
+                  </div>
                   <div>
                     <span
-                      className="fs-5"
-                      style={{ fontFamily: 'monospace', color: '#8a8a8a' }}
+                      className="ff-roboto-mono fs-5"
+                      style={{ color: '#8a8a8a' }}
                     >
                       00:00:00
                     </span>
