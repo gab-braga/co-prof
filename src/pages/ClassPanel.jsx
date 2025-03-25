@@ -45,8 +45,8 @@ export default () => {
             </div>
 
             <div className="d-flex gap-3 flex-wrap">
-              <Link to={`/classes/${id}`} className="btn btn-primary">
-                Gravações
+              <Link to={`/classes/${id}/recording`} className="btn btn-primary">
+                Gravar
               </Link>
             </div>
           </div>

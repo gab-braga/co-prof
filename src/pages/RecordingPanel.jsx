@@ -4,28 +4,48 @@ import { findClass } from '../services/classService';
 import CreateClassModal from '../components/CreateClassModal';
 import { Link, useParams } from 'react-router-dom';
 import ButtonRecord from '../components/ButtonRecord/ButtonRecord';
+import Timer from '../components/Timer';
 
-let interval = null;
+let intervalPulse = null;
+let intervalTimer = null;
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
   const [classData, setClassData] = useState({});
   const [isRecording, setIsRecording] = useState(false);
   const [pulse, setPulse] = useState(0);
+  const [time, setTime] = useState(0);
   const { id } = useParams();
 
   function startRecording() {
     if (!isRecording) {
       setIsRecording(true);
-      interval = setInterval(() => {
-        const value = Math.ceil(Math.random() * 30);
-        setPulse(value);
-      }, 500);
+      startPulse();
+      startTimer();
     } else {
       setIsRecording(false);
-      if (interval) clearInterval(interval);
+      onDestroy();
       setPulse(0);
+      setTime(0);
     }
+  }
+
+  function startPulse() {
+    intervalPulse = setInterval(() => {
+      const value = Math.ceil(Math.random() * 30);
+      setPulse(value);
+    }, 500);
+  }
+
+  function startTimer() {
+    intervalTimer = setInterval(() => {
+      setTime((time) => time + 100);
+    }, 100);
+  }
+
+  function onDestroy() {
+    if (intervalPulse) clearInterval(intervalPulse);
+    if (intervalTimer) clearInterval(intervalTimer);
   }
 
   async function loadingData() {
@@ -43,9 +63,7 @@ export default () => {
   useEffect(() => {
     loadingData();
 
-    return () => {
-      if (interval) clearInterval(interval);
-    };
+    return () => onDestroy();
   }, []);
 
   return (
@@ -94,12 +112,7 @@ export default () => {
                     />
                   </div>
                   <div>
-                    <span
-                      className="ff-roboto-mono fs-5"
-                      style={{ color: '#8a8a8a' }}
-                    >
-                      00:00:00
-                    </span>
+                    <Timer time={time} />
                   </div>
                 </div>
               </div>
