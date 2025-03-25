@@ -28,7 +28,24 @@ async function firebaseResetPassword(email) {
   await sendPasswordResetEmail(auth, email);
 }
 
-function firebaseObserveTokenChanges(handleChangeToken, handleError = () => { }) {
+async function firebaseUserToken() {
+  const user = auth.currentUser;
+
+  if (user) {
+    try {
+      const token = await user.getIdToken();
+      return token;
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+function firebaseObserveTokenChanges(
+  handleChangeToken,
+  handleError = () => {},
+) {
   return onIdTokenChanged(
     auth,
     async (user) => {
@@ -39,7 +56,7 @@ function firebaseObserveTokenChanges(handleChangeToken, handleError = () => { })
         handleChangeToken(null);
       }
     },
-    handleError
+    handleError,
   );
 }
 
@@ -48,5 +65,6 @@ export {
   firebaseLoginGoogle,
   firebaseLogout,
   firebaseResetPassword,
-  firebaseObserveTokenChanges
+  firebaseUserToken,
+  firebaseObserveTokenChanges,
 };

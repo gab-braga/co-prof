@@ -27,21 +27,14 @@ export default function AuthProvider({ children }) {
   function handleTokenChanges() {
     return firebaseObserveTokenChanges(
       (token) => {
-        if (token) {
-          localStorage.setItem('token', token);
-          setIsAuthenticated(true);
-        } else {
-          localStorage.removeItem('token');
-          setIsAuthenticated(false);
-        }
+        setIsAuthenticated(!!token);
         setIsLoading(false);
       },
       (error) => {
         console.error(error);
-        localStorage.removeItem('token');
         setIsAuthenticated(false);
         setIsLoading(false);
-      }
+      },
     );
   }
 

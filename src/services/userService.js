@@ -1,11 +1,12 @@
 import api from '../api/api';
+import { firebaseUserToken } from '../firebase/auth';
 
 async function createUser(data) {
   await api.post('/users', data);
 }
 
 async function getAuthenticatedUser() {
-  const token = localStorage.getItem('token');
+  const token = await firebaseUserToken();
   const response = await api.get(`/users/me`, {
     headers: { Authorization: token },
   });
@@ -13,7 +14,7 @@ async function getAuthenticatedUser() {
 }
 
 async function updateUser(data) {
-  const token = localStorage.getItem('token');
+  const token = await firebaseUserToken();
   const response = await api.put('/users', data, {
     headers: { Authorization: token },
   });
@@ -21,7 +22,7 @@ async function updateUser(data) {
 }
 
 async function updateUserPassword(data) {
-  const token = localStorage.getItem('token');
+  const token = await firebaseUserToken();
   const response = await api.put('/users/password', data, {
     headers: { Authorization: token },
   });
@@ -29,7 +30,7 @@ async function updateUserPassword(data) {
 }
 
 async function deleteUser() {
-  const token = localStorage.getItem('token');
+  const token = await firebaseUserToken();
   const response = await api.delete('/users', {
     headers: { Authorization: token },
   });
