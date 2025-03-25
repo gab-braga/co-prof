@@ -9,6 +9,7 @@ import AuthProvider from './context/authContext';
 import { Toaster } from 'react-hot-toast';
 import Account from './pages/Account';
 import RecordingPanel from './pages/RecordingPanel';
+import ClassPanel from './pages/ClassPanel';
 
 export default () => {
   return (
@@ -22,6 +23,7 @@ export default () => {
           <Route element={<PrivateRoutes />}>
             <Route path="/account" element={<Account />} />
             <Route path="/classes" element={<Classes />} />
+            <Route path="/classes/:id" element={<ClassPanel />} />
             <Route path="/classes/:id/recording" element={<RecordingPanel />} />
           </Route>
         </Routes>
