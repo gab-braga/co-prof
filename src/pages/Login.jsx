@@ -25,7 +25,7 @@ export default () => {
         navigate('/classes');
       },
       {
-        loading: 'Carregando..',
+        loading: 'Carregando...',
         error: 'E-mail ou senha incorretos.',
         success: null,
       },
@@ -79,6 +79,10 @@ export default () => {
                   value: true,
                   message: 'Por favor, preencha com seu e-mail.',
                 },
+                maxLength: {
+                  value: 250,
+                  message: 'Limite máximo de 250 caracteres.',
+                },
                 pattern: {
                   value: EMAIL_REGEX,
                   message: 'E-mail inválido. Verifique e tente novamente.',
@@ -104,6 +108,10 @@ export default () => {
                 required: {
                   value: true,
                   message: 'Por favor, preencha com sua senha.',
+                },
+                maxLength: {
+                  value: 50,
+                  message: 'Limite máximo de 50 caracteres.',
                 },
               })}
               type="password"

@@ -13,7 +13,7 @@ export default () => {
         await logout();
       },
       {
-        loading: 'Carregando..',
+        loading: 'Carregando...',
         error: 'Algo deu errado. Verifique e tente novamente.',
         success: null,
       },

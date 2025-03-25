@@ -25,7 +25,7 @@ export default () => {
         navigate('/classes');
       },
       {
-        loading: 'Carregando..',
+        loading: 'Carregando...',
         error: 'Algo deu errado. Verifique e tente novamente.',
         success: null,
       },
@@ -70,8 +70,8 @@ export default () => {
                   message: 'Por favor, preencha com seu nome.',
                 },
                 maxLength: {
-                  value: 200,
-                  message: 'Este campo aceita no máximo 200 caracteres.',
+                  value: 250,
+                  message: 'Limite máximo de 250 caracteres.',
                 },
               })}
               type="text"
@@ -94,6 +94,10 @@ export default () => {
                 required: {
                   value: true,
                   message: 'Por favor, preencha com seu e-mail.',
+                },
+                maxLength: {
+                  value: 250,
+                  message: 'Limite máximo de 250 caracteres.',
                 },
                 pattern: {
                   value: EMAIL_REGEX,

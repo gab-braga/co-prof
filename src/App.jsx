@@ -7,6 +7,7 @@ import Signup from './pages/Signup';
 import Classes from './pages/Classes';
 import AuthProvider from './context/authContext';
 import { Toaster } from 'react-hot-toast';
+import Account from './pages/Account';
 
 export default () => {
   return (
@@ -19,6 +20,7 @@ export default () => {
 
           <Route element={<PrivateRoutes />}>
             <Route path="/classes" element={<Classes />} />
+            <Route path="/account" element={<Account />} />
           </Route>
         </Routes>
       </BrowserRouter>
