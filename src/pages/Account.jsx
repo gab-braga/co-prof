@@ -19,7 +19,7 @@ export default () => {
 
       <div className="container flex-grow-1">
         <div
-          className="bg-white p-4 mt-4 rounded-3 shadow mb-5"
+          className="d-flex flex-column bg-white p-4 mt-4 rounded-3 shadow mb-5"
           style={{ minHeight: '70vh' }}
         >
           <div className="row">

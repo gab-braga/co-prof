@@ -8,6 +8,7 @@ import Classes from './pages/Classes';
 import AuthProvider from './context/authContext';
 import { Toaster } from 'react-hot-toast';
 import Account from './pages/Account';
+import RecordingPanel from './pages/RecordingPanel';
 
 export default () => {
   return (
@@ -19,8 +20,9 @@ export default () => {
           <Route path="/signup" element={<Signup />} />
 
           <Route element={<PrivateRoutes />}>
-            <Route path="/classes" element={<Classes />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/classes" element={<Classes />} />
+            <Route path="/classes/:id/recording" element={<RecordingPanel />} />
           </Route>
         </Routes>
       </BrowserRouter>

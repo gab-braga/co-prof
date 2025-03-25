@@ -30,10 +30,10 @@ export default () => {
 
       <div className="container flex-grow-1">
         <div
-          className="bg-white p-4 mt-4 rounded-3 shadow mb-5"
+          className="d-flex flex-column bg-white p-4 mt-4 rounded-3 shadow mb-5"
           style={{ minHeight: '70vh' }}
         >
-          <div className="d-flex gap-2 flex-wrap justify-content-between align-items-center">
+          <div className="d-flex gap-2 flex-wrap justify-content-between  align-items-start">
             <h2 className="fs-4">Turmas</h2>
 
             <div className="d-flex gap-3 flex-wrap">
@@ -57,7 +57,7 @@ export default () => {
               Nenhuma turma cadastrada.
             </p>
           ) : (
-            <div className="mt-4 row">
+            <div className="flex-grow-1 mt-4 row">
               {classes.map(({ id, name, section }) => (
                 <ClassCard
                   key={id}
