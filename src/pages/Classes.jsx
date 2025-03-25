@@ -52,7 +52,7 @@ export default () => {
         </div>
       </div>
 
-      <CreateClassModal updateClasses={loadingData} />
+      <CreateClassModal handleUpdates={loadingData} />
     </div>
   );
 };

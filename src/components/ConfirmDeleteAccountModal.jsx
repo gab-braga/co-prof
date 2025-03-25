@@ -1,13 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import toast from 'react-hot-toast';
-import { deleteClass, findClass } from '../services/classService';
+import { deleteUser } from '../services/userService';
+import { useNavigate } from 'react-router-dom';
 
-export default ({ id, handleUpdates }) => {
+export default () => {
   const modalRef = useRef(null);
-
-  function executeUpdates() {
-    if (typeof handleUpdates === 'function') handleUpdates();
-  }
+  const navigate = useNavigate();
 
   async function handleConfirm() {
     const modalElement = modalRef.current;
@@ -16,13 +14,13 @@ export default ({ id, handleUpdates }) => {
       if (modal) {
         toast.promise(
           async () => {
-            await deleteClass(id);
-            executeUpdates();
+            await deleteUser();
             modal.hide();
+            navigate('/signin');
           },
           {
             loading: 'Carregando...',
-            success: 'Turma excluída.',
+            success: 'Conta excluída.',
             error: 'Algo deu errado. Tente novamente mais tarde.',
           },
         );
@@ -34,9 +32,9 @@ export default ({ id, handleUpdates }) => {
     <div
       ref={modalRef}
       className="modal fade"
-      id={`confirm-delete-class-modal-${id}`}
+      id="confirm-delete-account-modal"
       tabIndex="-1"
-      aria-labelledby={`confirm-delete-class-modal-label-${id}`}
+      aria-labelledby="confirm-delete-account-modal-label"
       aria-hidden="true"
     >
       <div className="modal-dialog">
@@ -44,9 +42,9 @@ export default ({ id, handleUpdates }) => {
           <div className="modal-header">
             <h2
               className="modal-title fs-5"
-              id={`confirm-delete-class-modal-label-${id}`}
+              id="confirm-delete-account-modal-label"
             >
-              Tem certeza que deseja excluir?
+              Tem certeza que deseja excluir esta conta?
             </h2>
             <button
               type="button"
@@ -64,7 +62,11 @@ export default ({ id, handleUpdates }) => {
             >
               Fechar
             </button>
-            <button onClick={handleConfirm} className="btn btn-danger">
+            <button
+              onClick={handleConfirm}
+              type="button"
+              className="btn btn-danger"
+            >
               Excluir
             </button>
           </div>

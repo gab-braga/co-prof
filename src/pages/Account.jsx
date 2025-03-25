@@ -10,6 +10,7 @@ import { EMAIL_REGEX } from '../utils/regex';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/authContext';
 import { useNavigate } from 'react-router-dom';
+import ConfirmDeleteAccountModal from '../components/ConfirmDeleteAccountModal';
 
 export default () => {
   return (
@@ -37,13 +38,19 @@ export default () => {
             <div className="col-12 col-lg-6 mt-5">
               <h2 className="ff-popins fs-4">Excluir Conta</h2>
 
-              <button className="btn btn-danger w-100 mt-2">
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#confirm-delete-account-modal"
+                className="btn btn-danger w-100 mt-2"
+              >
                 Excluir Conta
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      <ConfirmDeleteAccountModal />
     </div>
   );
 };
