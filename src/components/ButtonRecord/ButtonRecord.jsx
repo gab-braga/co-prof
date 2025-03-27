@@ -7,7 +7,7 @@ export default ({ isRecording, pulse, ...rest }) => {
       {...rest}
       style={{
         '--scale-size': isRecording ? '1' : '1.5',
-        '--pulse-size': `${pulse}px`,
+        '--pulse-size': isRecording ? `${pulse}px` : '0px',
       }}
       className="button-record"
     ></button>

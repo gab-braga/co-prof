@@ -1,51 +1,132 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PanelHeader from '../components/PanelHeader';
 import { findClass } from '../services/classService';
 import CreateClassModal from '../components/CreateClassModal';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import ButtonRecord from '../components/ButtonRecord/ButtonRecord';
 import Timer from '../components/Timer';
 
-let intervalPulse = null;
-let intervalTimer = null;
-
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [classData, setClassData] = useState({});
+  const [isRecordingStarted, setIsRecordingStarted] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [pulse, setPulse] = useState(0);
-  const [time, setTime] = useState(0);
-  const { id } = useParams();
 
-  function startRecording() {
-    if (!isRecording) {
-      setIsRecording(true);
-      startPulse();
-      startTimer();
+  const [volume, setVolume] = useState(false);
+  const [time, setTime] = useState(0);
+  const [urlAudio, setUrlAudio] = useState(null);
+
+  const paused = useRef(false);
+
+  const animationPulse = useRef(null);
+  const timerInterval = useRef(0);
+
+  const [classData, setClassData] = useState({});
+  const { id } = useParams(null);
+
+  const mediaRecorder = useRef(null);
+  const audioChunks = useRef([]);
+
+  function handleToggleRecording() {
+    if (!isRecordingStarted) {
+      handleStartRecording();
+    } else if (isRecording) {
+      handlePauseRecording();
     } else {
-      setIsRecording(false);
-      onDestroy();
-      setPulse(0);
-      setTime(0);
+      handleResumeRecording();
     }
   }
 
-  function startPulse() {
-    intervalPulse = setInterval(() => {
-      const value = Math.ceil(Math.random() * 30);
-      setPulse(value);
-    }, 500);
+  async function handleStartRecording() {
+    setUrlAudio(null);
+    startTime.current = Date.now();
+    paused.current = false;
+
+    console.log('Iniciado');
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    source.connect(analyser);
+
+    updateVolume(analyser, dataArray);
+    startTime();
+
+    const recorder = new MediaRecorder(stream);
+
+    recorder.ondataavailable = (event) => audioChunks.current.push(event.data);
+
+    recorder.onstop = stopRecording;
+
+    recorder.start();
+    mediaRecorder.current = recorder;
+
+    setIsRecording(true);
+    setIsRecordingStarted(true);
   }
 
-  function startTimer() {
-    intervalTimer = setInterval(() => {
-      setTime((time) => time + 100);
-    }, 100);
+  function handlePauseRecording() {
+    console.log('Pausado');
+    if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
+      mediaRecorder.current.pause();
+      setIsRecording(false);
+      paused.current = true;
+    }
   }
 
-  function onDestroy() {
-    if (intervalPulse) clearInterval(intervalPulse);
-    if (intervalTimer) clearInterval(intervalTimer);
+  function handleResumeRecording() {
+    console.log('Retomado');
+    if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
+      mediaRecorder.current.resume();
+      setIsRecording(true);
+      paused.current = false;
+    }
+  }
+
+  function handleStopRecording() {
+    console.log('Parado');
+    if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
+      mediaRecorder.current.stop();
+      setIsRecording(false);
+      setIsRecordingStarted(false);
+      setVolume(0);
+    }
+  }
+
+  function stopRecording() {
+    if (animationPulse.current) cancelAnimationFrame(animationPulse.current);
+    if (timerInterval.current) clearInterval(timerInterval.current);
+
+    const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
+    const urlAudio = URL.createObjectURL(audioBlob);
+    audioChunks.current = [];
+    handleSubmitRecording(urlAudio);
+  }
+
+  function updateVolume(analyser, dataArray) {
+    if (!paused.current) {
+      analyser.getByteFrequencyData(dataArray);
+      const avgVolume = Number.parseInt(
+        dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length,
+      );
+      setVolume(avgVolume);
+    }
+
+    animationPulse.current = requestAnimationFrame(() =>
+      updateVolume(analyser, dataArray),
+    );
+  }
+
+  function startTime() {
+    const range = 100;
+    timerInterval.current = setInterval(() => {
+      if (!paused.current) setTime((time) => time + range);
+    }, range);
+  }
+
+  function handleSubmitRecording(urlAudio) {
+    setUrlAudio(urlAudio);
   }
 
   async function loadingData() {
@@ -63,8 +144,12 @@ export default () => {
   useEffect(() => {
     loadingData();
 
-    return () => onDestroy();
+    return () => {
+      if (timerInterval.current) clearInterval(timerInterval.current);
+    };
   }, []);
+
+  if (!id) return <Navigate to="/classes" />;
 
   return (
     <div className="min-vh-100 d-flex flex-column gradient-blue-to-top">
@@ -106,14 +191,30 @@ export default () => {
                   <h3 className="fs-5">Iniciar Gravação</h3>
                   <div className="p-4">
                     <ButtonRecord
-                      onClick={startRecording}
+                      onClick={handleToggleRecording}
                       isRecording={isRecording}
-                      pulse={pulse}
+                      pulse={volume}
                     />
                   </div>
                   <div>
                     <Timer time={time} />
                   </div>
+                  <button
+                    onClick={handleStopRecording}
+                    className="btn btn-primary mt-3"
+                  >
+                    Encerrar
+                  </button>
+
+                  {urlAudio && (
+                    <a
+                      href={urlAudio}
+                      download="audio.wav"
+                      className="btn btn-primary"
+                    >
+                      Baixar Gravação
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
