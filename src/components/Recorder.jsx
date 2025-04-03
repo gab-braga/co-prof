@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import ButtonRecord from './ButtonRecord/ButtonRecord';
 import Timer from './Timer';
 import useRecorder from '../hooks/useRecorder';
 import useTimer from '../hooks/useTimer';
+import toast from 'react-hot-toast';
+import { microphoneMessages } from '../utils/messages';
 
 export default ({ handleSubmitRecording }) => {
   const [isRecordingStarted, setIsRecordingStarted] = useState(false);
@@ -30,9 +32,25 @@ export default ({ handleSubmitRecording }) => {
 
   async function handleStartRecording() {
     console.log('Iniciado');
-    startRecording();
-    startTimer();
-    setIsRecordingStarted(true);
+    try {
+      await startRecording();
+      startTimer();
+      setIsRecordingStarted(true);
+    } catch (error) {
+      if (
+        error.name === 'NotAllowedError' ||
+        error.name === 'PermissionDeniedError'
+      ) {
+        toast.error(microphoneMessages.errorMicrophonePermission);
+      } else if (
+        error.name === 'NotFoundError' ||
+        error.name === 'DevicesNotFoundError'
+      ) {
+        toast.error(microphoneMessages.errorMicrophoneNotFound);
+      } else {
+        toast.error(microphoneMessages.errorMicrophoneAccess);
+      }
+    }
   }
 
   function handlePauseRecording() {
@@ -60,7 +78,13 @@ export default ({ handleSubmitRecording }) => {
       style={{ maxWidth: '400px', backgroundColor: '#EEEEEE' }}
     >
       <div className="w-100 d-flex flex-column gap-2 justify-content-center align-items-center">
-        <h3 className="fs-5">Iniciar Gravação</h3>
+        <h3 className="fs-5">
+          {!isRecordingStarted
+            ? 'Iniciar Gravação'
+            : isRecording
+            ? 'Gravando...'
+            : 'Pausado'}
+        </h3>
         <div className="p-4">
           <ButtonRecord
             onClick={handleToggleRecording}
@@ -71,9 +95,14 @@ export default ({ handleSubmitRecording }) => {
         <div>
           <Timer time={time} />
         </div>
-        <button onClick={handleStopRecording} className="btn btn-primary mt-3">
-          Encerrar
-        </button>
+        {isRecordingStarted && (
+          <button
+            onClick={handleStopRecording}
+            className="btn btn-primary mt-3"
+          >
+            Encerrar
+          </button>
+        )}
       </div>
     </div>
   );
