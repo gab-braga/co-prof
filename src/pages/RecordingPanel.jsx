@@ -4,6 +4,8 @@ import CreateClassModal from '../components/CreateClassModal';
 import Recorder from '../components/Recorder';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { findClass } from '../services/classService';
+import toast from 'react-hot-toast';
+import { uploadFile } from '../services/storageService';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,8 +13,17 @@ export default () => {
   const [classData, setClassData] = useState({});
   const { id } = useParams(null);
 
-  function handleSubmitRecording(urlAudio) {
-    console.log(urlAudio);
+  function handleSubmitRecording(audioBlob) {
+    toast.promise(
+      async () => {
+        const response = await uploadFile(audioBlob);
+        console.log(response);
+      },
+      {
+        loading: 'Salvando gravação...',
+        error: 'Houve um erro. Tente novamente mais tarde.',
+      },
+    );
   }
 
   async function loadingData() {

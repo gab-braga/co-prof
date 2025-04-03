@@ -53,7 +53,7 @@ export default () => {
 
   function stopRecording(onRecordingStop) {
     const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
-    const urlAudio = URL.createObjectURL(audioBlob);
+    // const urlAudio = URL.createObjectURL(audioBlob);
     audioChunks.current = [];
 
     if (recorder.current && recorder.current.state !== 'inactive') {
@@ -61,7 +61,7 @@ export default () => {
       setIsRecording(false);
     }
 
-    onRecordingStop(urlAudio);
+    onRecordingStop(audioBlob);
   }
 
   function updateVolume(analyser, audioFrequencyData) {
