@@ -2,26 +2,42 @@ import React, { useEffect, useRef, useState } from 'react';
 import PanelHeader from '../components/PanelHeader';
 import CreateClassModal from '../components/CreateClassModal';
 import Recorder from '../components/Recorder';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findClass } from '../services/classService';
 import toast from 'react-hot-toast';
 import { uploadFile } from '../services/storageService';
+import { createRecording } from '../services/recordingService';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [classData, setClassData] = useState({});
   const { id } = useParams(null);
+  const navigate = useNavigate();
 
-  function handleSubmitRecording(audioBlob) {
-    toast.promise(
+  async function handleSubmitRecording(audioBlob) {
+    const recordingUrl = await toast.promise(
       async () => {
         const response = await uploadFile(audioBlob);
-        console.log(response);
+        return response.fileUrl;
       },
       {
         loading: 'Salvando gravação...',
         error: 'Houve um erro. Tente novamente mais tarde.',
+      },
+    );
+
+    toast.promise(
+      async () => {
+        const classId = classData.id;
+        const data = { classId, recordingUrl };
+        await createRecording(data);
+        navigate(`/classes/${classId}`);
+      },
+      {
+        loading: 'Carregando...',
+        success: 'Nova gravação salva.',
+        error: 'Algo deu errado. Tente novamente mais tarde.',
       },
     );
   }
