@@ -49,6 +49,7 @@ export default () => {
       setIsRecording(false);
       setVolume(0);
       cancelVolumeAnimation();
+      console.log("BUG")
     }
   }
 
