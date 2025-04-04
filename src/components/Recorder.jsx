@@ -33,7 +33,7 @@ export default ({ handleSubmitRecording }) => {
   async function handleStartRecording() {
     console.log('Iniciado');
     try {
-      await startRecording();
+      await startRecording(handleSubmitRecording);
       startTimer();
       setIsRecordingStarted(true);
     } catch (error) {
@@ -67,7 +67,7 @@ export default ({ handleSubmitRecording }) => {
 
   function handleStopRecording() {
     console.log('Parado');
-    stopRecording(handleSubmitRecording);
+    stopRecording();
     stopTimer();
     setIsRecordingStarted(false);
   }

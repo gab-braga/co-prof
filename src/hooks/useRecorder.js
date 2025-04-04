@@ -1,36 +1,45 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default () => {
   const [isRecording, setIsRecording] = useState(false);
-  const [volume, setVolume] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [volume, setVolume] = useState(0);
 
-  const analyser = useRef(null);
-  const recorder = useRef(null);
   const audioChunks = useRef([]);
-
+  const recorder = useRef(null);
+  const analyser = useRef(null);
+  const frequencyData = useRef(null);
   const animationPulse = useRef(null);
 
-  async function startRecording() {
+  async function startRecording(onRecordingStop) {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const audioContext = new AudioContext();
     const audioAnalyser = audioContext.createAnalyser();
-    const sourceMidia = audioContext.createMediaStreamSource(stream);
-    sourceMidia.connect(audioAnalyser);
+    const microphone = audioContext.createMediaStreamSource(stream);
+    microphone.connect(audioAnalyser);
 
     const audioFrequencyData = new Uint8Array(audioAnalyser.frequencyBinCount);
-    updateVolume(audioAnalyser, audioFrequencyData);
-
     const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = (event) =>
-      audioChunks.current.push(event.data);
-    mediaRecorder.start();
-    // mediaRecorder.onstop = () => {};
 
     analyser.current = audioAnalyser;
     recorder.current = mediaRecorder;
+    frequencyData.current = audioFrequencyData;
+
+    mediaRecorder.ondataavailable = (event) => {
+      audioChunks.current.push(event.data);
+    };
+
+    mediaRecorder.onstop = () => {
+      if (microphone) microphone.disconnect();
+      const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
+      audioChunks.current = [];
+      onRecordingStop(audioBlob);
+    };
+
+    mediaRecorder.start();
     setPaused(false);
     setIsRecording(true);
+    updateVolumeMeter();
   }
 
   function pauseRecording() {
@@ -39,6 +48,7 @@ export default () => {
       setPaused(true);
       setIsRecording(false);
       setVolume(0);
+      cancelVolumeAnimation();
     }
   }
 
@@ -47,37 +57,37 @@ export default () => {
       recorder.current.resume();
       setPaused(false);
       setIsRecording(true);
-      setVolume(0);
+      updateVolumeMeter();
     }
   }
 
-  function stopRecording(onRecordingStop) {
-    const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
-    // const urlAudio = URL.createObjectURL(audioBlob);
-    audioChunks.current = [];
-
+  function stopRecording() {
     if (recorder.current && recorder.current.state !== 'inactive') {
       recorder.current.stop();
       setIsRecording(false);
     }
-
-    onRecordingStop(audioBlob);
   }
 
-  function updateVolume(analyser, audioFrequencyData) {
-    analyser.getByteFrequencyData(audioFrequencyData);
-    if (!paused) {
-      const avgVolume = Number.parseInt(
-        audioFrequencyData.reduce((sum, value) => sum + value, 0) /
-          audioFrequencyData.length,
-      );
-      setVolume(avgVolume);
-    }
-
-    animationPulse.current = requestAnimationFrame(() =>
-      updateVolume(analyser, audioFrequencyData),
+  function updateVolumeMeter() {
+    analyser.current.getByteFrequencyData(frequencyData.current);
+    const countFrequencyData = frequencyData.current.length;
+    const totalFrequencyData = frequencyData.current.reduce(
+      (sum, value) => sum + value,
+      0,
     );
+    const averageVolume = Math.floor(totalFrequencyData / countFrequencyData);
+    setVolume(averageVolume);
+
+    animationPulse.current = requestAnimationFrame(updateVolumeMeter);
   }
+
+  function cancelVolumeAnimation() {
+    if (animationPulse.current) cancelAnimationFrame(animationPulse.current);
+  }
+
+  useEffect(() => {
+    return () => cancelVolumeAnimation();
+  }, []);
 
   return {
     isRecording,
