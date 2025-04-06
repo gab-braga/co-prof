@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PanelHeader from '../components/PanelHeader';
 import CreateClassModal from '../components/CreateClassModal';
 import Recorder from '../components/Recorder';
@@ -10,14 +10,15 @@ import { createRecording } from '../services/recordingService';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
-
   const [classData, setClassData] = useState({});
+
   const { id } = useParams(null);
   const navigate = useNavigate();
 
-  async function handleSubmitRecording(audioBlob) {
+  async function handleSubmitRecording(recording) {
     const recordingUrl = await toast.promise(
       async () => {
+        const { audioBlob } = recording;
         const response = await uploadFile(audioBlob);
         return response.fileUrl;
       },
@@ -29,8 +30,9 @@ export default () => {
 
     toast.promise(
       async () => {
+        const { recordingStartTime, recordingStopTime } = recording;
         const classId = classData.id;
-        const data = { classId, recordingUrl };
+        const data = { classId, recordingUrl, recordingStartTime, recordingStopTime };
         await createRecording(data);
         navigate(`/classes/${classId}`);
       },
@@ -45,8 +47,8 @@ export default () => {
   async function loadingData() {
     setIsLoading(true);
     try {
-      const data = await findClass(id);
-      setClassData(data);
+      const classData = await findClass(id);
+      setClassData(classData);
     } catch (error) {
       console.error(error);
     } finally {
@@ -91,7 +93,7 @@ export default () => {
               Carregando...
             </p>
           ) : (
-            <div className="flex-grow-1 d-flex justify-content-center align-items-center">
+            <div className="flex-grow-1 d-flex justify-content-center align-items-center pt-3">
               <Recorder handleSubmitRecording={handleSubmitRecording} />
             </div>
           )}

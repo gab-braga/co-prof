@@ -5,6 +5,9 @@ export default () => {
   const [paused, setPaused] = useState(false);
   const [volume, setVolume] = useState(0);
 
+  const recordingStartTime = useRef(null);
+  const recordingStopTime = useRef(null);
+
   const audioChunks = useRef([]);
   const recorder = useRef(null);
   const analyser = useRef(null);
@@ -33,9 +36,16 @@ export default () => {
       if (microphone) microphone.disconnect();
       const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
       audioChunks.current = [];
-      onRecordingStop(audioBlob);
+
+      const data = {
+        audioBlob,
+        recordingStartTime: recordingStartTime.current,
+        recordingStopTime: recordingStopTime.current
+      }
+      onRecordingStop(data);
     };
 
+    recordingStartTime.current = Date.now();
     mediaRecorder.start();
     setPaused(false);
     setIsRecording(true);
@@ -63,6 +73,7 @@ export default () => {
 
   function stopRecording() {
     if (recorder.current && recorder.current.state !== 'inactive') {
+      recordingStopTime.current = Date.now();
       recorder.current.stop();
       setIsRecording(false);
     }

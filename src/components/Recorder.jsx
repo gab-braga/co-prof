@@ -74,7 +74,7 @@ export default ({ handleSubmitRecording }) => {
 
   return (
     <div
-      className="mt-4 mx-4 px-4 py-5 w-100 rounded"
+      className="px-4 py-5 w-100 rounded"
       style={{ maxWidth: '400px', backgroundColor: '#EEEEEE' }}
     >
       <div className="w-100 d-flex flex-column gap-2 justify-content-center align-items-center">
