@@ -62,8 +62,8 @@ export default ({ id, name, section, className, handleUpdates, ...rest }) => {
         </div>
       </div>
 
-      {/* <UpdateClassModal id={id} handleUpdates={handleUpdates} />
-      <ConfirmDeleteClassModal id={id} handleUpdates={handleUpdates} /> */}
+      <UpdateClassModal id={id} handleUpdates={handleUpdates} />
+      <ConfirmDeleteClassModal id={id} handleUpdates={handleUpdates} />
     </div>
   );
 };
