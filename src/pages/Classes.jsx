@@ -61,7 +61,7 @@ export default () => {
               Nenhuma turma cadastrada.
             </p>
           ) : (
-            <div className="flex-grow-1 mt-4 row">
+            <div className="flex-grow-1 row g-4 align-content-start pt-4">
               {classes.map(({ id, name, section }) => (
                 <ClassCard
                   key={id}

@@ -38,9 +38,21 @@ export default () => {
           className="d-flex flex-column bg-white p-4 mt-4 rounded-3 shadow mb-5"
           style={{ minHeight: '70vh' }}
         >
-          <div className="d-flex gap-2 flex-wrap justify-content-between align-items-start">
+          <div className="d-flex gap-2 flex-wrap justify-content-between align-items-start overflow-x-auto">
             <div className="d-flex flex-column">
-              <h2 className="fs-4 text-truncate">{classData.name || '...'}</h2>
+              <div className="d-flex align-items-center mb-2">
+                <h2
+                  className="fs-4 text-truncate m-0"
+                  style={{ maxWidth: '30ch' }}
+                >
+                  {classData.name || '...'}
+                </h2>
+                <i
+                  class="bi bi-chevron-double-left ms-3 me-2"
+                  style={{ color: '#8a8a8a' }}
+                ></i>
+                <Link to="/classes">Turmas</Link>
+              </div>
               {classData.section && (
                 <span className="text-secondary text-truncate">
                   {classData.section}
@@ -68,7 +80,7 @@ export default () => {
               Nenhuma gravação encontrada.
             </p>
           ) : (
-            <div className="flex-grow-1 overflow-x-auto pt-3">
+            <div className="flex-grow-1 overflow-x-auto pt-4">
               <table
                 className="table table-striped w-100"
                 style={{ minWidth: '650px' }}
@@ -77,7 +89,7 @@ export default () => {
                   {recordings.map((recording) => (
                     <tr key={recording.id}>
                       <td className="p-2 w-100">
-                        <span className="text-uppercase">
+                        <span className="text-nowrap text-uppercase">
                           {formatRecordingTitle(recording)}
                         </span>
                       </td>

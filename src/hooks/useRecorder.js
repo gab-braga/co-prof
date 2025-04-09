@@ -34,14 +34,14 @@ export default () => {
 
     mediaRecorder.onstop = () => {
       if (microphone) microphone.disconnect();
-      const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
+      const audioBlob = new Blob(audioChunks.current, { type: 'audio/mp3' });
       audioChunks.current = [];
 
       const data = {
         audioBlob,
         recordingStartTime: recordingStartTime.current,
-        recordingStopTime: recordingStopTime.current
-      }
+        recordingStopTime: recordingStopTime.current,
+      };
       onRecordingStop(data);
     };
 

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export default ({ id, name, section, className, handleUpdates, ...rest }) => {
   return (
     <div id={id} className={className} {...rest}>
-      <div className="border border-2 border-primary p-3 rounded mt-4">
+      <div className="border border-2 border-primary p-3 rounded">
         <div className="d-flex flex-column" style={{ minHeight: '150px' }}>
           <div className="d-flex justify-content-between align-items-center">
             <h3 className="fs-5 text-truncate">{name || '...'}</h3>
@@ -40,9 +40,9 @@ export default ({ id, name, section, className, handleUpdates, ...rest }) => {
               </ul>
             </div>
           </div>
-          <span className="fs-6 text-secondary text-truncate">
-            {section || '...'}
-          </span>
+          {!!section && (
+            <span className="fs-6 text-secondary text-truncate">{section}</span>
+          )}
           <div className="flex-grow-1 d-flex flex-wrap gap-2 justify-content-end align-items-end">
             <Link
               to={`/classes/${id}`}
@@ -62,8 +62,8 @@ export default ({ id, name, section, className, handleUpdates, ...rest }) => {
         </div>
       </div>
 
-      <UpdateClassModal id={id} handleUpdates={handleUpdates} />
-      <ConfirmDeleteClassModal id={id} handleUpdates={handleUpdates} />
+      {/* <UpdateClassModal id={id} handleUpdates={handleUpdates} />
+      <ConfirmDeleteClassModal id={id} handleUpdates={handleUpdates} /> */}
     </div>
   );
 };
