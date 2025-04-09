@@ -125,9 +125,11 @@ export default ({ handleUpdates }) => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
+              <i className="bi bi-x-lg me-2"></i>
               Fechar
             </button>
             <button form="create-class-form" className="btn btn-primary">
+              <i className="bi bi-plus-lg me-2"></i>
               Criar
             </button>
           </div>

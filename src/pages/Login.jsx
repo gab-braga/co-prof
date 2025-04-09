@@ -125,7 +125,10 @@ export default () => {
             )}
           </div>
 
-          <button className="w-100 btn bg-gradient-blue mt-4">Entrar</button>
+          <button className="w-100 btn bg-gradient-blue mt-4">
+            Entrar
+            <i className="bi bi-box-arrow-in-right ms-2"></i>
+          </button>
         </form>
 
         <div className="text-end mt-3">

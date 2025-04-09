@@ -44,13 +44,15 @@ export default ({ id, name, section, className, handleUpdates, ...rest }) => {
             {section || '...'}
           </span>
           <div className="flex-grow-1 d-flex flex-wrap gap-2 justify-content-end align-items-end">
-            <Link to={`/classes/${id}`} className="btn btn-sm btn-primary">
+            <Link to={`/classes/${id}`} className="btn btn-sm btn-primary text-nowrap">
+              <i className="bi bi-box-arrow-up-right me-2"></i>
               Abrir
             </Link>
             <Link
               to={`/classes/${id}/recording`}
-              className="btn btn-sm btn-primary"
+              className="btn btn-sm btn-primary text-nowrap"
             >
+              <i className="bi bi-mic me-2"></i>
               Gravar
             </Link>
           </div>

@@ -151,12 +151,14 @@ export default ({ id, handleUpdates }) => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
+              <i className="bi bi-x-lg me-2"></i>
               Fechar
             </button>
             <button
               form={`update-class-form-${id}`}
               className="btn btn-primary"
             >
+              <i className="bi bi-pencil me-2"></i>
               Editar
             </button>
           </div>

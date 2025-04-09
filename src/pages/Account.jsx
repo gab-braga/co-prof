@@ -41,8 +41,9 @@ export default () => {
               <button
                 data-bs-toggle="modal"
                 data-bs-target="#confirm-delete-account-modal"
-                className="btn btn-danger w-100 mt-2"
+                className="btn btn-danger w-100 mt-2 text-nowrap"
               >
+                <i className="bi bi-exclamation-triangle-fill me-2"></i>
                 Excluir Conta
               </button>
             </div>
@@ -156,6 +157,7 @@ function FormAccess() {
       </div>
 
       <button disabled={isLoading} className="btn bg-gradient-blue w-100 mt-4">
+        <i className="bi bi-floppy me-2"></i>
         Salvar
       </button>
     </form>
@@ -240,7 +242,10 @@ function FormPassword() {
         )}
       </div>
 
-      <button className="btn bg-gradient-blue w-100 mt-4">Alterar</button>
+      <button className="btn bg-gradient-blue w-100 mt-4">
+        <i className="bi bi-pencil me-2"></i>
+        Alterar
+      </button>
     </form>
   );
 }

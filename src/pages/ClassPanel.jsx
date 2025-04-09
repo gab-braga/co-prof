@@ -56,7 +56,8 @@ export default () => {
             </div>
 
             <div className="d-flex gap-3 flex-wrap">
-              <Link to={`/classes/${id}/recording`} className="btn btn-primary">
+              <Link to={`/classes/${id}/recording`} className="btn btn-primary text-nowrap">
+                <i className="bi bi-mic me-2"></i>
                 Gravar
               </Link>
             </div>
@@ -85,17 +86,20 @@ export default () => {
                         </span>
                       </td>
                       <td className="p-2">
-                        <button className="btn btn-primary btn-sm">
+                        <button className="btn btn-primary btn-sm text-nowrap">
+                          <i className="bi bi-headphones me-2"></i>
                           Gravação
                         </button>
                       </td>
                       <td className="p-2">
-                        <button className="btn btn-primary btn-sm">
+                        <button className="btn btn-primary btn-sm text-nowrap">
+                          <i className="bi bi-journal-text me-2"></i>
                           Transcrição
                         </button>
                       </td>
                       <td className="p-2">
-                        <button className="btn btn-primary btn-sm">
+                        <button className="btn btn-primary btn-sm text-nowrap">
+                          <i className="bi bi-file-text me-2"></i>
                           Resumo
                         </button>
                       </td>

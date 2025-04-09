@@ -60,6 +60,7 @@ export default () => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
+              <i className="bi bi-x-lg me-2"></i>
               Fechar
             </button>
             <button
@@ -67,6 +68,7 @@ export default () => {
               type="button"
               className="btn btn-danger"
             >
+              <i className="bi bi-trash3 me-2"></i>
               Excluir
             </button>
           </div>

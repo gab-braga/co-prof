@@ -37,12 +37,16 @@ export default () => {
             <h2 className="fs-4">Turmas</h2>
 
             <div className="d-flex gap-3 flex-wrap">
-              <button className="btn btn-secondary">Importar Turmas</button>
+              <button className="btn btn-secondary text-nowrap">
+              <i className="bi bi-arrow-bar-down me-2"></i>
+                Importar Turmas
+              </button>
               <button
-                className="btn btn-primary"
+                className="btn btn-primary text-nowrap"
                 data-bs-toggle="modal"
                 data-bs-target="#create-class-modal"
               >
+                <i className="bi bi-plus-lg me-2"></i>
                 Nova Turma
               </button>
             </div>

@@ -75,7 +75,8 @@ export default () => {
                   })}
                   type="text"
                   id="emailRecovery"
-                  autoComplete='off'
+                  autoComplete="off"
+                  placeholder="exemplo@dominio.com"
                   className={
                     errors.email ? 'form-control is-invalid' : 'form-control'
                   }
@@ -94,9 +95,11 @@ export default () => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
+              <i className="bi bi-x-lg me-2"></i>
               Fechar
             </button>
             <button form="forgot-password-form" className="btn btn-primary">
+              <i className="bi bi-envelope-arrow-up me-2"></i>
               Enviar
             </button>
           </div>

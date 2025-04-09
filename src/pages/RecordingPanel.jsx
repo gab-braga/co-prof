@@ -83,6 +83,7 @@ export default () => {
 
             <div className="d-flex gap-3 flex-wrap">
               <Link to={`/classes/${id}`} className="btn btn-primary">
+                <i className="bi bi-box-arrow-up-right me-2"></i>
                 Gravações
               </Link>
             </div>

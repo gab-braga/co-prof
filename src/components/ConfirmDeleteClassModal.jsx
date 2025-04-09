@@ -62,9 +62,11 @@ export default ({ id, handleUpdates }) => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
+              <i className="bi bi-x-lg me-2"></i>
               Fechar
             </button>
             <button onClick={handleConfirm} className="btn btn-danger">
+              <i className="bi bi-trash3 me-2"></i>
               Excluir
             </button>
           </div>

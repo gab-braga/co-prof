@@ -98,8 +98,9 @@ export default ({ handleSubmitRecording }) => {
         {isRecordingStarted && (
           <button
             onClick={handleStopRecording}
-            className="btn btn-primary mt-3"
+            className="btn btn-primary mt-3 text-nowrap"
           >
+            <i className="bi bi-stop-circle me-2"></i>
             Encerrar
           </button>
         )}
