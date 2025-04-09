@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import PanelHeader from "../components/PanelHeader";
-import { Link, useParams } from "react-router-dom";
-import { findClass } from "../services/classService";
-import { findRecordingsByClassId } from "../services/recordingService";
-import { formatMillisToDate, formatMillisToShortWeekDay, formatMillisToTime } from "../utils/date";
+import React, { useEffect, useState } from 'react';
+import PanelHeader from '../components/PanelHeader';
+import { Link, useParams } from 'react-router-dom';
+import { findClass } from '../services/classService';
+import { findRecordingsByClassId } from '../services/recordingService';
+import { formatRecordingTitle } from '../utils/date';
+import ListenRecordingModal from '../components/Modal/ListenRecordingModal';
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
   const [classData, setClassData] = useState({});
@@ -28,14 +29,6 @@ export default () => {
     loadingData();
   }, []);
 
-  function formatRecordingTitle(recording) {
-    const weekDay = formatMillisToShortWeekDay(recording.recordingStartTime);
-    const date = formatMillisToDate(recording.recordingStartTime);
-    const startTime = formatMillisToTime(recording.recordingStartTime);
-    const stopTime = formatMillisToTime(recording.recordingStopTime);
-    return `${weekDay} ${date} ${startTime} - ${stopTime}`;
-  }
-
   return (
     <div className="min-vh-100 d-flex flex-column gradient-blue-to-top">
       <PanelHeader />
@@ -43,11 +36,11 @@ export default () => {
       <div className="container flex-grow-1">
         <div
           className="d-flex flex-column bg-white p-4 mt-4 rounded-3 shadow mb-5"
-          style={{ minHeight: "70vh" }}
+          style={{ minHeight: '70vh' }}
         >
           <div className="d-flex gap-2 flex-wrap justify-content-between align-items-start">
             <div className="d-flex flex-column">
-              <h2 className="fs-4 text-truncate">{classData.name || "..."}</h2>
+              <h2 className="fs-4 text-truncate">{classData.name || '...'}</h2>
               {classData.section && (
                 <span className="text-secondary text-truncate">
                   {classData.section}
@@ -56,7 +49,10 @@ export default () => {
             </div>
 
             <div className="d-flex gap-3 flex-wrap">
-              <Link to={`/classes/${id}/recording`} className="btn btn-primary text-nowrap">
+              <Link
+                to={`/classes/${id}/recording`}
+                className="btn btn-primary text-nowrap"
+              >
                 <i className="bi bi-mic me-2"></i>
                 Gravar
               </Link>
@@ -64,18 +60,18 @@ export default () => {
           </div>
 
           {isLoading ? (
-            <p className="fw-medium mt-4" style={{ color: "#8a8a8a" }}>
+            <p className="fw-medium mt-4" style={{ color: '#8a8a8a' }}>
               Carregando...
             </p>
           ) : !recordings || recordings.length == 0 ? (
-            <p className="fw-medium mt-4" style={{ color: "#8a8a8a" }}>
+            <p className="fw-medium mt-4" style={{ color: '#8a8a8a' }}>
               Nenhuma gravação encontrada.
             </p>
           ) : (
             <div className="flex-grow-1 overflow-x-auto pt-3">
               <table
                 className="table table-striped w-100"
-                style={{ minWidth: "650px" }}
+                style={{ minWidth: '650px' }}
               >
                 <tbody>
                   {recordings.map((recording) => (
@@ -86,7 +82,11 @@ export default () => {
                         </span>
                       </td>
                       <td className="p-2">
-                        <button className="btn btn-primary btn-sm text-nowrap">
+                        <button
+                          className="btn btn-primary btn-sm text-nowrap"
+                          data-bs-toggle="modal"
+                          data-bs-target={`#listen-recording-modal-${recording.id}`}
+                        >
                           <i className="bi bi-headphones me-2"></i>
                           Gravação
                         </button>
@@ -117,7 +117,7 @@ export default () => {
                               <button
                                 type="button"
                                 data-bs-toggle="modal"
-                                data-bs-target={"#update-recording-modal"}
+                                data-bs-target={'#update-recording-modal'}
                                 className="btn dropdown-item"
                               >
                                 Editar
@@ -126,7 +126,7 @@ export default () => {
                                 type="button"
                                 data-bs-toggle="modal"
                                 data-bs-target={
-                                  "#confirm-delete-recording-modal"
+                                  '#confirm-delete-recording-modal'
                                 }
                                 className="btn dropdown-item"
                               >
@@ -144,6 +144,10 @@ export default () => {
           )}
         </div>
       </div>
+
+      {recordings.map((recording) => (
+        <ListenRecordingModal recording={recording} />
+      ))}
     </div>
   );
 };
