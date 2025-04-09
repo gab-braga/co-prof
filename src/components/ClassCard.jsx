@@ -1,6 +1,6 @@
 import React from 'react';
-import UpdateClassModal from './UpdateClassModal';
-import ConfirmDeleteClassModal from './ConfirmDeleteClassModal';
+import UpdateClassModal from './Modal/UpdateClassModal';
+import ConfirmDeleteClassModal from './Modal/ConfirmDeleteClassModal';
 import { Link } from 'react-router-dom';
 
 export default ({ id, name, section, className, handleUpdates, ...rest }) => {
@@ -44,7 +44,10 @@ export default ({ id, name, section, className, handleUpdates, ...rest }) => {
             {section || '...'}
           </span>
           <div className="flex-grow-1 d-flex flex-wrap gap-2 justify-content-end align-items-end">
-            <Link to={`/classes/${id}`} className="btn btn-sm btn-primary text-nowrap">
+            <Link
+              to={`/classes/${id}`}
+              className="btn btn-sm btn-primary text-nowrap"
+            >
               <i className="bi bi-box-arrow-up-right me-2"></i>
               Abrir
             </Link>

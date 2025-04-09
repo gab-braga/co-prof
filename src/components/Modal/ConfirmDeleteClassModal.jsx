@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { deleteClass, findClass } from '../services/classService';
+import { deleteClass, findClass } from '../../services/classService';
 
 export default ({ id, handleUpdates }) => {
   const modalRef = useRef(null);

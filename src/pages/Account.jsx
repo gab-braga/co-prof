@@ -10,7 +10,7 @@ import { EMAIL_REGEX } from '../utils/regex';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/authContext';
 import { useNavigate } from 'react-router-dom';
-import ConfirmDeleteAccountModal from '../components/ConfirmDeleteAccountModal';
+import ConfirmDeleteAccountModal from '../components/Modal/ConfirmDeleteAccountModal';
 
 export default () => {
   return (

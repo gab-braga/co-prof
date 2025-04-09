@@ -7,7 +7,7 @@ import { EMAIL_REGEX } from '../utils/regex';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/authContext';
 import GoogleIcon from '../assets/google.svg';
-import ForgotPasswordModal from '../components/ForgotPasswordModal';
+import ForgotPasswordModal from '../components/Modal/ForgotPasswordModal';
 
 export default () => {
   const {

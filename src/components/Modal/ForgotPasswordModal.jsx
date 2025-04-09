@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { EMAIL_REGEX } from '../utils/regex';
-import { firebaseResetPassword } from '../firebase/auth';
+import { EMAIL_REGEX } from '../../utils/regex';
+import { firebaseResetPassword } from '../../firebase/auth';
 import toast from 'react-hot-toast';
 
 export default () => {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import PanelHeader from '../components/PanelHeader';
-import CreateClassModal from '../components/CreateClassModal';
 import Recorder from '../components/Recorder';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findClass } from '../services/classService';
@@ -32,7 +31,12 @@ export default () => {
       async () => {
         const { recordingStartTime, recordingStopTime } = recording;
         const classId = classData.id;
-        const data = { classId, recordingUrl, recordingStartTime, recordingStopTime };
+        const data = {
+          classId,
+          recordingUrl,
+          recordingStartTime,
+          recordingStopTime,
+        };
         await createRecording(data);
         navigate(`/classes/${classId}`);
       },
@@ -100,8 +104,6 @@ export default () => {
           )}
         </div>
       </div>
-
-      <CreateClassModal handleUpdates={loadingData} />
     </div>
   );
 };

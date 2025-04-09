@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import toast from 'react-hot-toast';
-import { deleteUser } from '../services/userService';
+import { deleteUser } from '../../services/userService';
 import { useNavigate } from 'react-router-dom';
 
 export default () => {

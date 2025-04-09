@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PanelHeader from '../components/PanelHeader';
 import ClassCard from '../components/ClassCard';
 import { findAllClasses } from '../services/classService';
-import CreateClassModal from '../components/CreateClassModal';
+import CreateClassModal from '../components/Modal/CreateClassModal';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,7 +38,7 @@ export default () => {
 
             <div className="d-flex gap-3 flex-wrap">
               <button className="btn btn-secondary text-nowrap">
-              <i className="bi bi-arrow-bar-down me-2"></i>
+                <i className="bi bi-arrow-bar-down me-2"></i>
                 Importar Turmas
               </button>
               <button
