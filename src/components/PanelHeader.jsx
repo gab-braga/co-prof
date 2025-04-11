@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CoProfIconLight from '../assets/co-prof-white.svg';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
@@ -19,6 +19,12 @@ export default () => {
       },
     );
   }
+
+  function resetBodyStyles() {
+    document.body.removeAttribute('style');
+  }
+
+  useEffect(() => resetBodyStyles, []);
 
   return (
     <header className="py-2">
