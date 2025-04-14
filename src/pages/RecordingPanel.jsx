@@ -3,9 +3,9 @@ import PanelHeader from '../components/PanelHeader';
 import Recorder from '../components/Recorder';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findClass } from '../services/classService';
-import toast from 'react-hot-toast';
-import { uploadFile } from '../services/storageService';
 import { createRecording } from '../services/recordingService';
+import { uploadFile } from '../services/storageService';
+import toast from 'react-hot-toast';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +19,7 @@ export default () => {
       async () => {
         const { audioBlob } = recording;
         const response = await uploadFile(audioBlob);
-        return response.fileUrl;
+        return response;
       },
       {
         loading: 'Salvando gravação...',

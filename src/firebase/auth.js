@@ -60,6 +60,15 @@ function firebaseObserveTokenChanges(
   );
 }
 
+function firebaseGetUserId() {
+  const user = auth.currentUser;
+  if (user) {
+    const uid = user.uid;
+    return uid;
+  }
+  return null;
+}
+
 export {
   firebaseLogin,
   firebaseLoginGoogle,
@@ -67,4 +76,5 @@ export {
   firebaseResetPassword,
   firebaseUserToken,
   firebaseObserveTokenChanges,
+  firebaseGetUserId,
 };

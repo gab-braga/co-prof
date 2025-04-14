@@ -1,7 +1,14 @@
+import { firebaseGetUserId, firebaseUserToken } from '../firebase/auth';
+import { firebaseUploadBlob } from '../firebase/storage';
 import api from '../api/api';
-import { firebaseUserToken } from '../firebase/auth';
 
 async function uploadFile(blob) {
+  const userId = firebaseGetUserId();
+  const response = await firebaseUploadBlob(blob, userId);
+  return response;
+}
+
+async function uploadFileAPI(blob) {
   const formData = new FormData();
   formData.append('file', blob);
 
@@ -15,4 +22,4 @@ async function uploadFile(blob) {
   return response.data;
 }
 
-export { uploadFile };
+export { uploadFile, uploadFileAPI };
