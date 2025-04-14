@@ -52,26 +52,28 @@ export default () => {
             </div>
           </div>
 
-          {isLoading ? (
-            <p className="fw-medium mt-4" style={{ color: '#8a8a8a' }}>
-              Carregando...
-            </p>
-          ) : !classes || classes.length == 0 ? (
-            <p className="fw-medium mt-4" style={{ color: '#8a8a8a' }}>
-              Nenhuma turma cadastrada.
-            </p>
-          ) : (
-            <div className="flex-grow-1 row g-4 align-content-start pt-4">
-              {classes.map(({ id, name, section }) => (
-                <ClassCard
-                  key={id}
-                  {...{ id, name, section }}
-                  handleUpdates={loadingData}
-                  className="col-12 col-md-6 col-lg-4 col-xl-3"
-                />
-              ))}
-            </div>
-          )}
+          <div className="flex-grow-1 pt-4">
+            {isLoading ? (
+              <p className="fw-medium" style={{ color: '#8a8a8a' }}>
+                Carregando...
+              </p>
+            ) : !classes || classes.length == 0 ? (
+              <p className="fw-medium" style={{ color: '#8a8a8a' }}>
+                Nenhuma turma cadastrada.
+              </p>
+            ) : (
+              <div className="row g-4 align-content-start">
+                {classes.map(({ id, name, section }) => (
+                  <ClassCard
+                    key={id}
+                    {...{ id, name, section }}
+                    handleUpdates={loadingData}
+                    className="col-12 col-md-6 col-lg-4 col-xl-3"
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

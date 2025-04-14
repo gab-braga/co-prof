@@ -71,89 +71,91 @@ export default () => {
             </div>
           </div>
 
-          {isLoading ? (
-            <p className="fw-medium mt-4" style={{ color: '#8a8a8a' }}>
-              Carregando...
-            </p>
-          ) : !recordings || recordings.length == 0 ? (
-            <p className="fw-medium mt-4" style={{ color: '#8a8a8a' }}>
-              Nenhuma gravação encontrada.
-            </p>
-          ) : (
-            <div className="flex-grow-1 overflow-x-auto pt-4">
-              <table
-                className="table table-striped w-100"
-                style={{ minWidth: '650px' }}
-              >
-                <tbody>
-                  {recordings.map((recording) => (
-                    <tr key={recording.id}>
-                      <td className="p-2 w-100">
-                        <span className="text-nowrap text-uppercase">
-                          {formatRecordingTitle(recording)}
-                        </span>
-                      </td>
-                      <td className="p-2">
-                        <button
-                          className="btn btn-primary btn-sm text-nowrap"
-                          data-bs-toggle="modal"
-                          data-bs-target={`#listen-recording-modal-${recording.id}`}
-                        >
-                          <i className="bi bi-headphones me-2"></i>
-                          Gravação
-                        </button>
-                      </td>
-                      <td className="p-2">
-                        <button className="btn btn-primary btn-sm text-nowrap">
-                          <i className="bi bi-journal-text me-2"></i>
-                          Transcrição
-                        </button>
-                      </td>
-                      <td className="p-2">
-                        <button className="btn btn-primary btn-sm text-nowrap">
-                          <i className="bi bi-file-text me-2"></i>
-                          Resumo
-                        </button>
-                      </td>
-                      <td className="p-2">
-                        <div className="dropdown">
+          <div className="flex-grow-1 pt-4 d-flex">
+            {isLoading ? (
+              <p className="fw-medium" style={{ color: '#8a8a8a' }}>
+                Carregando...
+              </p>
+            ) : !recordings || recordings.length == 0 ? (
+              <p className="fw-medium" style={{ color: '#8a8a8a' }}>
+                Nenhuma gravação encontrada.
+              </p>
+            ) : (
+              <div className="flex-1 overflow-x-auto">
+                <table
+                  className="table table-striped w-100"
+                  style={{ minWidth: '650px' }}
+                >
+                  <tbody>
+                    {recordings.map((recording) => (
+                      <tr key={recording.id}>
+                        <td className="p-2 w-100">
+                          <span className="text-nowrap text-uppercase">
+                            {formatRecordingTitle(recording)}
+                          </span>
+                        </td>
+                        <td className="p-2">
                           <button
-                            type="type"
-                            data-bs-toggle="dropdown"
-                            className="btn fs-5 border-0 p-0"
+                            className="btn btn-primary btn-sm text-nowrap"
+                            data-bs-toggle="modal"
+                            data-bs-target={`#listen-recording-modal-${recording.id}`}
                           >
-                            <i className="bi bi-three-dots-vertical"></i>
+                            <i className="bi bi-headphones me-2"></i>
+                            Gravação
                           </button>
-                          <ul className="dropdown-menu">
-                            <li>
-                              <button
-                                type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target={'#update-recording-modal'}
-                                className="btn dropdown-item"
-                              >
-                                Editar
-                              </button>
-                              <button
-                                type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target={
-                                  '#confirm-delete-recording-modal'
-                                }
-                                className="btn dropdown-item"
-                              >
-                                Excluir
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                        </td>
+                        <td className="p-2">
+                          <button className="btn btn-primary btn-sm text-nowrap">
+                            <i className="bi bi-journal-text me-2"></i>
+                            Transcrição
+                          </button>
+                        </td>
+                        <td className="p-2">
+                          <button className="btn btn-primary btn-sm text-nowrap">
+                            <i className="bi bi-file-text me-2"></i>
+                            Resumo
+                          </button>
+                        </td>
+                        <td className="p-2">
+                          <div className="dropdown">
+                            <button
+                              type="type"
+                              data-bs-toggle="dropdown"
+                              className="btn fs-5 border-0 p-0"
+                            >
+                              <i className="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul className="dropdown-menu">
+                              <li>
+                                <button
+                                  type="button"
+                                  data-bs-toggle="modal"
+                                  data-bs-target={'#update-recording-modal'}
+                                  className="btn dropdown-item"
+                                >
+                                  Editar
+                                </button>
+                                <button
+                                  type="button"
+                                  data-bs-toggle="modal"
+                                  data-bs-target={
+                                    '#confirm-delete-recording-modal'
+                                  }
+                                  className="btn dropdown-item"
+                                >
+                                  Excluir
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

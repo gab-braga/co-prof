@@ -105,15 +105,17 @@ export default () => {
             </div>
           </div>
 
-          {isLoading ? (
-            <p className="fw-medium mt-4" style={{ color: '#8a8a8a' }}>
-              Carregando...
-            </p>
-          ) : (
-            <div className="flex-grow-1 d-flex justify-content-center align-items-center pt-3">
-              <Recorder handleSubmitRecording={handleSubmitRecording} />
-            </div>
-          )}
+          <div className="flex-grow-1 pt-4 d-flex">
+            {isLoading ? (
+              <p className="fw-medium" style={{ color: '#8a8a8a' }}>
+                Carregando...
+              </p>
+            ) : (
+              <div className="flex-grow-1 d-flex justify-content-center align-items-center">
+                <Recorder handleSubmitRecording={handleSubmitRecording} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
