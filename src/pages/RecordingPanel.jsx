@@ -3,8 +3,11 @@ import PanelHeader from '../components/PanelHeader';
 import Recorder from '../components/Recorder';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findClass } from '../services/classService';
-import { createRecording } from '../services/recordingService';
 import { uploadFile } from '../services/storageService';
+import {
+  createRecording,
+  generateRecordingTranscript,
+} from '../services/recordingService';
 import toast from 'react-hot-toast';
 
 export default () => {
@@ -15,37 +18,53 @@ export default () => {
   const navigate = useNavigate();
 
   async function handleSubmitRecording(recording) {
-    const recordingUrl = await toast.promise(
-      async () => {
-        const { audioBlob } = recording;
-        const response = await uploadFile(audioBlob);
-        return response;
-      },
-      {
-        loading: 'Salvando gravação...',
-        error: 'Houve um erro. Tente novamente mais tarde.',
-      },
-    );
+    try {
+      const recordingUrl = await toast.promise(
+        async () => {
+          const { audioBlob } = recording;
+          const response = await uploadFile(audioBlob);
+          return response;
+        },
+        {
+          loading: 'Salvando gravação...',
+          error: 'Houve um erro. Tente novamente mais tarde.',
+        },
+      );
 
-    toast.promise(
-      async () => {
-        const { recordingStartTime, recordingStopTime } = recording;
-        const classId = classData.id;
-        const data = {
-          classId,
-          recordingUrl,
-          recordingStartTime,
-          recordingStopTime,
-        };
-        await createRecording(data);
-        navigate(`/classes/${classId}`);
-      },
-      {
-        loading: 'Carregando...',
-        success: 'Nova gravação salva.',
-        error: 'Algo deu errado. Tente novamente mais tarde.',
-      },
-    );
+      const recordingSaved = await toast.promise(
+        async () => {
+          const { recordingStartTime, recordingStopTime } = recording;
+          const classId = classData.id;
+          const data = {
+            classId,
+            recordingUrl,
+            recordingStartTime,
+            recordingStopTime,
+          };
+          return await createRecording(data);
+        },
+        {
+          loading: 'Carregando...',
+          error: 'Algo deu errado. Tente novamente mais tarde.',
+        },
+      );
+
+      await toast.promise(
+        async () => {
+          const recordingId = recordingSaved.id;
+          await generateRecordingTranscript(recordingId);
+        },
+        {
+          loading: 'Transcrevendo...',
+          error: 'Algo deu errado. Tente novamente mais tarde.',
+        },
+      );
+
+      toast.success('Nova gravação salva.');
+      navigate(`/classes/${classData.id}`);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function loadingData() {

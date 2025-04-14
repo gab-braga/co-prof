@@ -5,6 +5,8 @@ import { findClass } from '../services/classService';
 import { findRecordingsByClassId } from '../services/recordingService';
 import { formatRecordingTitle } from '../utils/date';
 import ListenRecordingModal from '../components/Modal/ListenRecordingModal';
+import TranscriptionRecordingModal from '../components/Modal/TranscriptionRecordingModal';
+
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
   const [classData, setClassData] = useState({});
@@ -81,7 +83,7 @@ export default () => {
                 Nenhuma gravação encontrada.
               </p>
             ) : (
-              <div className="flex-1 overflow-x-auto">
+              <div className="w-100 flex-1 overflow-x-auto">
                 <table
                   className="table table-striped w-100"
                   style={{ minWidth: '650px' }}
@@ -105,7 +107,11 @@ export default () => {
                           </button>
                         </td>
                         <td className="p-2">
-                          <button className="btn btn-primary btn-sm text-nowrap">
+                          <button
+                            className="btn btn-primary btn-sm text-nowrap"
+                            data-bs-toggle="modal"
+                            data-bs-target={`#transcription-recording-modal-${recording.id}`}
+                          >
                             <i className="bi bi-journal-text me-2"></i>
                             Transcrição
                           </button>
@@ -160,7 +166,10 @@ export default () => {
       </div>
 
       {recordings.map((recording) => (
-        <ListenRecordingModal recording={recording} />
+        <div>
+          <ListenRecordingModal recording={recording} />
+          <TranscriptionRecordingModal recording={recording} />
+        </div>
       ))}
     </div>
   );
