@@ -4,7 +4,16 @@ import api from '../api/api';
 
 async function uploadFile(blob) {
   const userId = firebaseGetUserId();
-  const response = await firebaseUploadBlob(blob, userId);
+  const fileURL = await firebaseUploadBlob(blob, userId);
+  return fileURL;
+}
+
+async function uploadMultipleFiles(blobs) {
+  if (!Array.isArray(blobs)) throw new Error("Blobs is not Array.");
+
+  const promises = blobs.map((blob) => uploadFile(blob));
+
+  const response = await Promise.all(promises);
   return response;
 }
 
@@ -22,4 +31,4 @@ async function uploadFileAPI(blob) {
   return response.data;
 }
 
-export { uploadFile, uploadFileAPI };
+export { uploadFile, uploadMultipleFiles, uploadFileAPI };

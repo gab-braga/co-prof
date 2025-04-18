@@ -3,7 +3,7 @@ import PanelHeader from '../components/PanelHeader';
 import Recorder from '../components/Recorder';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findClass } from '../services/classService';
-import { uploadFile } from '../services/storageService';
+import { uploadMultipleFiles } from '../services/storageService';
 import {
   createRecording,
   generateRecordingTranscript,
@@ -19,10 +19,10 @@ export default () => {
 
   async function handleSubmitRecording(recording) {
     try {
-      const recordingUrl = await toast.promise(
+      const recordingPartsURLs = await toast.promise(
         async () => {
-          const { audioBlob } = recording;
-          const response = await uploadFile(audioBlob);
+          const { recordedBlobs } = recording;
+          const response = await uploadMultipleFiles(recordedBlobs);
           return response;
         },
         {
@@ -34,10 +34,9 @@ export default () => {
       const recordingSaved = await toast.promise(
         async () => {
           const { recordingStartTime, recordingStopTime } = recording;
-          const classId = classData.id;
           const data = {
-            classId,
-            recordingUrl,
+            classId: classData.id,
+            recordingPartsURLs,
             recordingStartTime,
             recordingStopTime,
           };
@@ -50,10 +49,7 @@ export default () => {
       );
 
       await toast.promise(
-        async () => {
-          const recordingId = recordingSaved.id;
-          await generateRecordingTranscript(recordingId);
-        },
+        async () => await generateRecordingTranscript(recordingSaved.id),
         {
           loading: 'Transcrevendo...',
           error: 'Algo deu errado. Tente novamente mais tarde.',

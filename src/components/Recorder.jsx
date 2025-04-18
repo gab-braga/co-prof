@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { microphoneMessages } from '../utils/messages';
 import ButtonRecord from './ButtonRecord/ButtonRecord';
 import Timer from './Timer';
-import useRecorder from '../hooks/useRecorder';
+import useSegmentedRecorder from '../hooks/useSegmentedRecorder';
 import useTimer from '../hooks/useTimer';
 import toast from 'react-hot-toast';
-import { microphoneMessages } from '../utils/messages';
 
 export default ({ handleSubmitRecording }) => {
   const [isRecordingStarted, setIsRecordingStarted] = useState(false);
@@ -16,7 +16,7 @@ export default ({ handleSubmitRecording }) => {
     pauseRecording,
     resumeRecording,
     stopRecording,
-  } = useRecorder();
+  } = useSegmentedRecorder();
 
   const { time, startTimer, pauseTimer, resumeTimer, stopTimer } = useTimer();
 

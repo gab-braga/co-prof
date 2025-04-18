@@ -22,9 +22,10 @@ async function findRecordingsByClassId(id) {
 async function generateRecordingTranscript(id) {
   const token = await firebaseUserToken();
   const response = await api.post(
-    `/recordings/${id}/transcription`,
-    {},
-    { headers: { Authorization: token } },
+    `/recordings/${id}/transcription`, {}, {
+      headers: { Authorization: token },
+      timeout: 60000
+    },
   );
   return response.data;
 }
