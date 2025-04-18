@@ -33,7 +33,7 @@ export default ({ handleSubmitRecording }) => {
   async function handleStartRecording() {
     console.log('Iniciado');
     try {
-      await startRecording(handleSubmitRecording);
+      await startRecording();
       startTimer();
       setIsRecordingStarted(true);
     } catch (error) {
@@ -50,6 +50,7 @@ export default ({ handleSubmitRecording }) => {
       } else {
         toast.error(microphoneMessages.errorMicrophoneAccess);
       }
+      console.error(error);
     }
   }
 
@@ -67,7 +68,7 @@ export default ({ handleSubmitRecording }) => {
 
   function handleStopRecording() {
     console.log('Parado');
-    stopRecording();
+    stopRecording(handleSubmitRecording);
     stopTimer();
     setIsRecordingStarted(false);
   }

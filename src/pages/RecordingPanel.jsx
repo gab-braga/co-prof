@@ -104,7 +104,7 @@ export default () => {
                   {classData.name || '...'}
                 </h2>
                 <i
-                  class="bi bi-chevron-double-left ms-3 me-2"
+                  className="bi bi-chevron-double-left ms-3 me-2"
                   style={{ color: '#8a8a8a' }}
                 ></i>
                 <Link to="/classes">Turmas</Link>
