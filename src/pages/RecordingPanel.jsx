@@ -4,10 +4,8 @@ import Recorder from '../components/Recorder';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findClass } from '../services/classService';
 import { uploadMultipleFiles } from '../services/storageService';
-import {
-  createRecording,
-  generateRecordingTranscript,
-} from '../services/recordingService';
+import { createRecording } from '../services/recordingService';
+import { transcribeMultipleAudios } from '../services/speechService';
 import toast from 'react-hot-toast';
 
 export default () => {
@@ -19,10 +17,11 @@ export default () => {
 
   async function handleSubmitRecording(recording) {
     try {
-      const recordingPartsURLs = await toast.promise(
+      const recordingURLs = await toast.promise(
         async () => {
           const { recordedBlobs } = recording;
           const response = await uploadMultipleFiles(recordedBlobs);
+
           return response;
         },
         {
@@ -31,27 +30,34 @@ export default () => {
         },
       );
 
-      const recordingSaved = await toast.promise(
+      const transcription = await toast.promise(
         async () => {
-          const { recordingStartTime, recordingStopTime } = recording;
-          const data = {
-            classId: classData.id,
-            recordingPartsURLs,
-            recordingStartTime,
-            recordingStopTime,
-          };
-          return await createRecording(data);
+          const results = await transcribeMultipleAudios(recordingURLs)
+          const transcriptions = results.map(result => result.transcription.text);
+          const transcription = transcriptions.join(" ");
+
+          return transcription;
         },
         {
-          loading: 'Carregando...',
+          loading: 'Transcrevendo...',
           error: 'Algo deu errado. Tente novamente mais tarde.',
         },
       );
 
       await toast.promise(
-        async () => await generateRecordingTranscript(recordingSaved.id),
+        async () => {
+          const { recordingStartTime, recordingStopTime } = recording;
+          const data = {
+            classId: classData.id,
+            transcription,
+            recordingStartTime,
+            recordingStopTime,
+          };
+
+          await createRecording(data);
+        },
         {
-          loading: 'Transcrevendo...',
+          loading: 'Finalizando...',
           error: 'Algo deu errado. Tente novamente mais tarde.',
         },
       );
