@@ -5,7 +5,7 @@ const baseURL = 'https://coprof.azurewebsites.net';
 
 const api = axios.create({
   baseURL,
-  timeout: 10000,
+  timeout: 30000,
 });
 
 export default api;

@@ -8,6 +8,7 @@ async function transcribeAudio(audioURL) {
     { audioURL },
     {
       headers: { Authorization: token },
+      timeout: 120000
     }
   );
   return response.data;
