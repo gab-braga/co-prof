@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 const TIME_SLICE = 500;
 const SEGMENTATION_VERIFICATION_TIME = 500;
 const TIME_SPLIT_AUDIO = 570000;
+const AUDIO_TYPE = "audio/mp3";
 
 export default () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -43,7 +44,7 @@ export default () => {
       segmentedAudioChunks.current.push(event.data);
 
     mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(segmentedAudioChunks.current, { type: "audio/mp3" });
+      const audioBlob = new Blob(segmentedAudioChunks.current, { type: AUDIO_TYPE });
       recordedBlobs.current.push(audioBlob);
       segmentedAudioChunks.current = [];
     }
@@ -83,6 +84,7 @@ export default () => {
   async function stopRecording(onRecordingStop) {
     if (recorder.current && recorder.current.state !== "inactive") {
       
+      recorder.onstop = null;
       await recorder.current.stop();
       recordingStopTime.current = Date.now();
       clearSegmentationCheckInterval();
@@ -92,11 +94,13 @@ export default () => {
         microphone.current = null;
       }
 
-      const audioBlob = new Blob(segmentedAudioChunks.current, { type: "audio/mp3" });
+      const audioBlob = new Blob(segmentedAudioChunks.current, { type: AUDIO_TYPE });
       recordedBlobs.current.push(audioBlob);
       segmentedAudioChunks.current = [];
+      const fullRecordedBlob = new Blob(recordedBlobs.current, { type: AUDIO_TYPE });
 
       const data = {
+        fullRecordedBlob,
         recordedBlobs: recordedBlobs.current,
         recordingStartTime: recordingStartTime.current,
         recordingStopTime: recordingStopTime.current,
@@ -110,6 +114,7 @@ export default () => {
       recordedBlobs.current = [];
       recordingStartTime.current = null;
       recordingStopTime.current = null;
+      recorder.current = null;
 
       onRecordingStop(data);
     }

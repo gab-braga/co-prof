@@ -3,7 +3,7 @@ import PanelHeader from '../components/PanelHeader';
 import Recorder from '../components/Recorder';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findClass } from '../services/classService';
-import { uploadMultipleFiles } from '../services/storageService';
+import { uploadFile, uploadMultipleFiles } from '../services/storageService';
 import { createRecording } from '../services/recordingService';
 import { transcribeMultipleAudios } from '../services/speechService';
 import toast from 'react-hot-toast';
@@ -17,12 +17,19 @@ export default () => {
 
   async function handleSubmitRecording(recording) {
     try {
-      const recordingURLs = await toast.promise(
+      const {
+        segmentedRecordingURLs,
+        recordingURL
+      } = await toast.promise(
         async () => {
-          const { recordedBlobs } = recording;
-          const response = await uploadMultipleFiles(recordedBlobs);
+          const { recordedBlobs, fullRecordedBlob } = recording;
+          const segmentedRecordingURLs = await uploadMultipleFiles(recordedBlobs);
+          const recordingURL = await uploadFile(fullRecordedBlob);
 
-          return response;
+          return {
+            segmentedRecordingURLs,
+            recordingURL
+          };
         },
         {
           loading: 'Salvando gravação...',
@@ -32,7 +39,7 @@ export default () => {
 
       const transcription = await toast.promise(
         async () => {
-          const results = await transcribeMultipleAudios(recordingURLs)
+          const results = await transcribeMultipleAudios(segmentedRecordingURLs)
           const transcriptions = results.map(result => result.transcription.text);
           const transcription = transcriptions.join(" ");
 
@@ -52,6 +59,8 @@ export default () => {
             transcription,
             recordingStartTime,
             recordingStopTime,
+            segmentedRecordingURLs,
+            recordingURL
           };
 
           await createRecording(data);
