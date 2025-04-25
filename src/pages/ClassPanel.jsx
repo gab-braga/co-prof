@@ -6,6 +6,7 @@ import { findRecordingsByClassId } from '../services/recordingService';
 import { formatRecordingTitle } from '../utils/date';
 import ListenRecordingModal from '../components/Modal/ListenRecordingModal';
 import TranscriptionRecordingModal from '../components/Modal/TranscriptionRecordingModal';
+import SummaryRecordingModal from '../components/Modal/SummaryRecordingModal';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -117,7 +118,11 @@ export default () => {
                           </button>
                         </td>
                         <td className="p-2">
-                          <button className="btn btn-primary btn-sm text-nowrap">
+                          <button
+                            className="btn btn-primary btn-sm text-nowrap"
+                            data-bs-toggle="modal"
+                            data-bs-target={`#summary-recording-modal-${recording.id}`}
+                          >
                             <i className="bi bi-file-text me-2"></i>
                             Resumo
                           </button>
@@ -166,9 +171,10 @@ export default () => {
       </div>
 
       {recordings.map((recording) => (
-        <div key={recording.id}>
+        <div key={`modals-${recording.id}`}>
           <ListenRecordingModal recording={recording} />
           <TranscriptionRecordingModal recording={recording} />
+          <SummaryRecordingModal recording={recording} />
         </div>
       ))}
     </div>

@@ -5,7 +5,11 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findClass } from '../services/classService';
 import { uploadFile, uploadMultipleFiles } from '../services/storageService';
 import { createRecording } from '../services/recordingService';
-import { transcribeMultipleAudios } from '../services/speechService';
+import {
+  generateTranslationSummary,
+  reduceMultipleTranscripts,
+  transcribeMultipleAudios
+} from '../services/speechService';
 import toast from 'react-hot-toast';
 
 export default () => {
@@ -37,16 +41,41 @@ export default () => {
         },
       );
 
-      const transcription = await toast.promise(
+      const {
+        transcripts,
+        transcription
+      } = await toast.promise(
         async () => {
-          const results = await transcribeMultipleAudios(segmentedRecordingURLs)
-          const transcriptions = results.map(result => result.transcription.text);
-          const transcription = transcriptions.join(" ");
+          const results = await transcribeMultipleAudios(segmentedRecordingURLs);
+          const transcripts = results.map(result => result.transcription.text);
+          const transcription = transcripts.join(" ");
 
-          return transcription;
+          console.log("transcription", transcription)
+          console.log("transcripts", transcripts)
+
+          return { transcripts, transcription };
         },
         {
           loading: 'Transcrevendo...',
+          error: 'Algo deu errado. Tente novamente mais tarde.',
+        },
+      );
+
+      const summaryData = await toast.promise(
+        async () => {
+          const results = await reduceMultipleTranscripts(transcripts);
+          const transcriptsReduced = results.map(result => result.text);
+          const transcriptionFinal = transcriptsReduced.join(" ");
+          const summaryData = await generateTranslationSummary(transcriptionFinal);
+          
+          console.log("transcriptsReduced", transcriptsReduced)
+          console.log("transcriptionFinal", transcriptionFinal)
+          console.log("summaryData", summaryData)
+
+          return summaryData;
+        },
+        {
+          loading: 'Gerando resumo...',
           error: 'Algo deu errado. Tente novamente mais tarde.',
         },
       );
@@ -60,7 +89,8 @@ export default () => {
             recordingStartTime,
             recordingStopTime,
             segmentedRecordingURLs,
-            recordingURL
+            recordingURL,
+            summaryData,
           };
 
           await createRecording(data);
