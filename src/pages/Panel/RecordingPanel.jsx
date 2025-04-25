@@ -1,60 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import PanelHeader from '../components/PanelHeader';
-import Recorder from '../components/Recorder';
+import PanelHeader from '../../components/PanelHeader';
+import Recorder from '../../components/Recorder';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
-import { findClass } from '../services/classService';
-import { uploadFile, uploadMultipleFiles } from '../services/storageService';
-import { createRecording } from '../services/recordingService';
+import { uploadFile, uploadMultipleFiles } from '../../services/storageService';
+import { createRecording } from '../../services/recordingService';
+import toast from 'react-hot-toast';
 import {
-  generateTranslationSummary,
+  summarizeTranscript,
   reduceMultipleTranscripts,
   transcribeMultipleAudios
-} from '../services/speechService';
-import toast from 'react-hot-toast';
+} from '../../services/speechService';
+import { findClass } from '../../services/classService';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [classData, setClassData] = useState({});
-
+  const [classData, setClassData] = useState(null);
   const { id } = useParams(null);
   const navigate = useNavigate();
-
-  async function handleSubmitRecording(recording) {
+  
+  async function loadClass() {    
+    setClassData(null);
+    setIsLoading(true);
     try {
-      const {
-        segmentedRecordingURLs,
-        recordingURL
-      } = await toast.promise(
-        async () => {
-          const { recordedBlobs, fullRecordedBlob } = recording;
-          const segmentedRecordingURLs = await uploadMultipleFiles(recordedBlobs);
-          const recordingURL = await uploadFile(fullRecordedBlob);
+      const classData = await findClass(id);
+      setClassData(classData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
-          return {
-            segmentedRecordingURLs,
-            recordingURL
-          };
-        },
+  async function handleSubmitRecording(recordingData) {
+    try {
+      const uploadData = await toast.promise(
+        async () => await uploadRecording(recordingData),
         {
           loading: 'Salvando gravação...',
-          error: 'Houve um erro. Tente novamente mais tarde.',
+          error: 'Algo deu errado. Tente novamente mais tarde.',
         },
       );
 
-      const {
-        transcripts,
-        transcription
-      } = await toast.promise(
-        async () => {
-          const results = await transcribeMultipleAudios(segmentedRecordingURLs);
-          const transcripts = results.map(result => result.transcription.text);
-          const transcription = transcripts.join(" ");
-
-          console.log("transcription", transcription)
-          console.log("transcripts", transcripts)
-
-          return { transcripts, transcription };
-        },
+      const transcriptData = await toast.promise(
+        async () => await transcribeRecording(uploadData),
         {
           loading: 'Transcrevendo...',
           error: 'Algo deu errado. Tente novamente mais tarde.',
@@ -62,18 +50,7 @@ export default () => {
       );
 
       const summaryData = await toast.promise(
-        async () => {
-          const results = await reduceMultipleTranscripts(transcripts);
-          const transcriptsReduced = results.map(result => result.text);
-          const transcriptionFinal = transcriptsReduced.join(" ");
-          const summaryData = await generateTranslationSummary(transcriptionFinal);
-          
-          console.log("transcriptsReduced", transcriptsReduced)
-          console.log("transcriptionFinal", transcriptionFinal)
-          console.log("summaryData", summaryData)
-
-          return summaryData;
-        },
+        async () => await generateSummary(transcriptData),
         {
           loading: 'Gerando resumo...',
           error: 'Algo deu errado. Tente novamente mais tarde.',
@@ -82,18 +59,13 @@ export default () => {
 
       await toast.promise(
         async () => {
-          const { recordingStartTime, recordingStopTime } = recording;
-          const data = {
-            classId: classData.id,
-            transcription,
-            recordingStartTime,
-            recordingStopTime,
-            segmentedRecordingURLs,
-            recordingURL,
-            summaryData,
-          };
-
-          await createRecording(data);
+          return await saveRecording(
+            classData.id,
+            recordingData,
+            uploadData,
+            transcriptData,
+            summaryData
+          )
         },
         {
           loading: 'Finalizando...',
@@ -108,21 +80,9 @@ export default () => {
     }
   }
 
-  async function loadingData() {
-    setIsLoading(true);
-    try {
-      const classData = await findClass(id);
-      setClassData(classData);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   useEffect(() => {
-    loadingData();
-  }, []);
+    loadClass();
+  }, [id]);
 
   if (!id) return <Navigate to="/classes" />;
 
@@ -142,7 +102,7 @@ export default () => {
                   className="fs-4 text-truncate m-0"
                   style={{ maxWidth: '30ch' }}
                 >
-                  {classData.name || '...'}
+                  {classData?.name || 'Carregando...'}
                 </h2>
                 <i
                   className="bi bi-chevron-double-left ms-3 me-2"
@@ -150,7 +110,7 @@ export default () => {
                 ></i>
                 <Link to="/classes">Turmas</Link>
               </div>
-              {classData.section && (
+              {classData?.section && (
                 <span className="text-secondary text-truncate">
                   {classData.section}
                 </span>
@@ -181,3 +141,46 @@ export default () => {
     </div>
   );
 };
+
+async function uploadRecording(recordingData) {
+  const { recordedBlobs, fullRecordedBlob } = recordingData;
+  const segmentedRecordingURLs = await uploadMultipleFiles(recordedBlobs);
+  const recordingURL = await uploadFile(fullRecordedBlob);
+  return { segmentedRecordingURLs, recordingURL };
+}
+
+async function transcribeRecording(uploadData) {
+  const { segmentedRecordingURLs } = uploadData;
+  const results = await transcribeMultipleAudios(segmentedRecordingURLs);
+  const transcripts = results.map(result => result.text);
+  const transcript = transcripts.join(" ");
+  return { transcripts, transcript };
+}
+
+async function generateSummary(transcriptData) {
+  const { transcripts } = transcriptData;
+  const results = await reduceMultipleTranscripts(transcripts);
+  const transcriptsReduced = results.map(result => result.text);
+  const transcriptFinal = transcriptsReduced.join(" ");
+  return await summarizeTranscript(transcriptFinal);
+}
+
+async function saveRecording(
+  classId,
+  recordingData,
+  uploadData,
+  transcriptData,
+  summaryData
+) {
+  const { recordingStartTime, recordingStopTime } = recordingData;
+  const { transcript } = transcriptData;
+  const data = {
+    classId,
+    recordingStartTime,
+    recordingStopTime,
+    transcript,
+    uploadData,
+    summaryData,
+  };
+  return await createRecording(data);
+}

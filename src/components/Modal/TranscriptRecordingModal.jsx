@@ -5,9 +5,9 @@ export default ({ recording }) => {
   return (
     <div
       className="modal fade"
-      id={`transcription-recording-modal-${recording.id}`}
+      id={`transcript-recording-modal-${recording.id}`}
       tabIndex="-1"
-      aria-labelledby={`transcription-recording-modal-label-${recording.id}`}
+      aria-labelledby={`transcript-recording-modal-label-${recording.id}`}
       aria-hidden="true"
     >
       <div className="modal-dialog modal-lg">
@@ -15,7 +15,7 @@ export default ({ recording }) => {
           <div className="modal-header">
             <h2
               className="modal-title text-uppercase fs-5"
-              id={`transcription-recording-modal-label-${recording.id}`}
+              id={`transcript-recording-modal-label-${recording.id}`}
             >
               {formatRecordingTitle(recording)}
             </h2>
@@ -26,7 +26,7 @@ export default ({ recording }) => {
               aria-label="Close"
             ></button>
           </div>
-          <div className="modal-body">{recording.transcription}</div>
+          <div className="modal-body">{recording.transcript}</div>
           <div className="modal-footer">
             <button
               type="button"

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import PanelHeader from '../components/PanelHeader';
+import { EMAIL_REGEX } from '../../utils/regex';
+import { useForm } from 'react-hook-form';
+import { useAuth } from '../../context/authContext';
+import { useNavigate } from 'react-router-dom';
+import PanelHeader from '../../components/PanelHeader';
+import ConfirmDeleteAccountModal from '../../components/Modal/ConfirmDeleteAccountModal';
+import toast from 'react-hot-toast';
 import {
   getAuthenticatedUser,
   updateUser,
   updateUserPassword,
-} from '../services/userService';
-import { useForm } from 'react-hook-form';
-import { EMAIL_REGEX } from '../utils/regex';
-import toast from 'react-hot-toast';
-import { useAuth } from '../context/authContext';
-import { useNavigate } from 'react-router-dom';
-import ConfirmDeleteAccountModal from '../components/Modal/ConfirmDeleteAccountModal';
+} from '../../services/userService';
 
 export default () => {
   return (

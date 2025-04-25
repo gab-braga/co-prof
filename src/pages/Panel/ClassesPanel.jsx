@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import PanelHeader from '../components/PanelHeader';
-import ClassCard from '../components/ClassCard';
-import { findAllClasses } from '../services/classService';
-import CreateClassModal from '../components/Modal/CreateClassModal';
+import PanelHeader from '../../components/PanelHeader';
+import ClassCard from '../../components/ClassCard';
+import CreateClassModal from '../../components/Modal/CreateClassModal';
+import { findAllClasses } from '../../services/classService';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [classes, setClasses] = useState([]);
+  const [classes, setClasses] = useState(null);
 
-  async function loadingData() {
+  async function loadClasses() {
+    setClasses(null);
     setIsLoading(true);
     try {
       const data = await findAllClasses();
@@ -21,9 +22,9 @@ export default () => {
   }
 
   useEffect(() => {
-    loadingData();
+    loadClasses();
   }, []);
-
+  
   return (
     <div className="min-vh-100 d-flex flex-column gradient-blue-to-top">
       <PanelHeader />
@@ -67,7 +68,7 @@ export default () => {
                   <ClassCard
                     key={id}
                     {...{ id, name, section }}
-                    handleUpdates={loadingData}
+                    handleUpdates={() => loadClasses()}
                     className="col-12 col-md-6 col-lg-4 col-xl-3"
                   />
                 ))}
@@ -77,7 +78,7 @@ export default () => {
         </div>
       </div>
 
-      <CreateClassModal handleUpdates={loadingData} />
+      <CreateClassModal handleUpdates={() => loadClasses()} />
     </div>
   );
 };

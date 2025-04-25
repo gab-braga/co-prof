@@ -14,11 +14,11 @@ async function transcribeAudio(audioURL) {
   return response.data;
 }
 
-async function reduceTranscription(transcription) {
+async function reduceTranscript(transcript) {
   const token = await firebaseUserToken();
   const response = await api.post(
     `/speech/reduce`,
-    { transcription },
+    { transcript },
     {
       headers: { Authorization: token },
       timeout: 120000
@@ -27,11 +27,11 @@ async function reduceTranscription(transcription) {
   return response.data;
 }
 
-async function generateTranslationSummary(transcription) {
+async function summarizeTranscript(transcript) {
   const token = await firebaseUserToken();
   const response = await api.post(
     `/speech/summary`,
-    { transcription },
+    { transcript },
     {
       headers: { Authorization: token },
       timeout: 120000
@@ -52,7 +52,7 @@ async function transcribeMultipleAudios(audioURLs) {
 async function reduceMultipleTranscripts(transcripts) {
   if (!Array.isArray(transcripts)) throw new Error("Transcripts is not Array.");
 
-  const promises = transcripts.map((transcript) => reduceTranscription(transcript));
+  const promises = transcripts.map((transcript) => reduceTranscript(transcript));
   const response = await Promise.all(promises);
 
   return response;
@@ -60,8 +60,8 @@ async function reduceMultipleTranscripts(transcripts) {
 
 export {
   transcribeAudio,
-  reduceTranscription,
-  generateTranslationSummary,
+  reduceTranscript,
+  summarizeTranscript,
   transcribeMultipleAudios,
   reduceMultipleTranscripts,
 };

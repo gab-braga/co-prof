@@ -53,7 +53,7 @@ export default ({ recording }) => {
           </div>
           <div className="modal-body">
             <audio ref={audioRef} controls className="w-100">
-              <source src={recording.recordingURL} type="audio/mp3" />
+              <source src={recording?.uploadData?.recordingURL} type="audio/mp3" />
             </audio>
           </div>
           <div className="modal-footer">
