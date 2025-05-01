@@ -5,9 +5,11 @@ import Timer from './Timer';
 import useSegmentedRecorder from '../hooks/useSegmentedRecorder';
 import useTimer from '../hooks/useTimer';
 import toast from 'react-hot-toast';
+import useWakeLock from '../hooks/useWakeLock';
 
 export default ({ handleSubmitRecording }) => {
   const [isRecordingStarted, setIsRecordingStarted] = useState(false);
+  const { requestWakeLock, releaseWakeLock } = useWakeLock();
 
   const {
     isRecording,
@@ -31,11 +33,12 @@ export default ({ handleSubmitRecording }) => {
   }
 
   async function handleStartRecording() {
-    console.log('Iniciado');
     try {
+      await requestWakeLock();
       await startRecording();
       startTimer();
       setIsRecordingStarted(true);
+      console.info('Recording started.');
     } catch (error) {
       if (
         error.name === 'NotAllowedError' ||
@@ -54,23 +57,26 @@ export default ({ handleSubmitRecording }) => {
     }
   }
 
-  function handlePauseRecording() {
-    console.log('Pausado');
+  async function handlePauseRecording() {
+    await releaseWakeLock();
     pauseRecording();
     pauseTimer();
+    console.info('Recording paused.');
   }
 
-  function handleResumeRecording() {
-    console.log('Retomado');
+  async function handleResumeRecording() {
+    await requestWakeLock();
     resumeRecording();
     resumeTimer();
+    console.info('Recording resumed.');
   }
 
-  function handleStopRecording() {
-    console.log('Parado');
+  async function handleStopRecording() {
+    await releaseWakeLock();
     stopRecording(handleSubmitRecording);
     stopTimer();
     setIsRecordingStarted(false);
+    console.info('Recording stopped.');
   }
 
   return (
