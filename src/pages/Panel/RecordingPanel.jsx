@@ -4,19 +4,24 @@ import Recorder from '../../components/Recorder';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { uploadFile, uploadMultipleFiles } from '../../services/storageService';
 import { createRecording } from '../../services/recordingService';
-import toast from 'react-hot-toast';
+import { findClass } from '../../services/classService';
+import usePreventPageLeave from '../../hooks/usePreventPageLeave';
+import useWakeLock from '../../hooks/useWakeLock';
 import {
   summarizeTranscript,
   reduceMultipleTranscripts,
   transcribeMultipleAudios
 } from '../../services/speechService';
-import { findClass } from '../../services/classService';
+import toast from 'react-hot-toast';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
   const [classData, setClassData] = useState(null);
   const { id } = useParams(null);
   const navigate = useNavigate();
+  const { enablePreventPageLeave, disablePreventPageLeave } =
+    usePreventPageLeave();
+  const { requestWakeLock, releaseWakeLock } = useWakeLock();
   
   async function loadClass() {    
     setClassData(null);
@@ -33,6 +38,9 @@ export default () => {
 
   async function handleSubmitRecording(recordingData) {
     try {
+      enablePreventPageLeave();
+      requestWakeLock();
+      
       const uploadData = await toast.promise(
         async () => await uploadRecording(recordingData),
         {
@@ -77,6 +85,9 @@ export default () => {
       navigate(`/classes/${classData.id}`);
     } catch (error) {
       console.error(error);
+    } finally {
+      disablePreventPageLeave();
+      releaseWakeLock();
     }
   }
 

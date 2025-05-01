@@ -18,7 +18,6 @@ export default () => {
   }
 
   function stopTimer() {
-    setTime(0);
     clearTimerInterval();
   }
 

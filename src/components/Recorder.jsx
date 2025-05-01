@@ -6,9 +6,12 @@ import useSegmentedRecorder from '../hooks/useSegmentedRecorder';
 import useTimer from '../hooks/useTimer';
 import toast from 'react-hot-toast';
 import useWakeLock from '../hooks/useWakeLock';
+import usePreventPageLeave from '../hooks/usePreventPageLeave';
 
 export default ({ handleSubmitRecording }) => {
   const [isRecordingStarted, setIsRecordingStarted] = useState(false);
+  const { enablePreventPageLeave, disablePreventPageLeave } =
+    usePreventPageLeave();
   const { requestWakeLock, releaseWakeLock } = useWakeLock();
 
   const {
@@ -34,12 +37,17 @@ export default ({ handleSubmitRecording }) => {
 
   async function handleStartRecording() {
     try {
-      await requestWakeLock();
+      enablePreventPageLeave();
+      requestWakeLock();
+
       await startRecording();
       startTimer();
       setIsRecordingStarted(true);
       console.info('Recording started.');
     } catch (error) {
+      disablePreventPageLeave();
+      releaseWakeLock();
+
       if (
         error.name === 'NotAllowedError' ||
         error.name === 'PermissionDeniedError'
@@ -58,24 +66,26 @@ export default ({ handleSubmitRecording }) => {
   }
 
   async function handlePauseRecording() {
-    await releaseWakeLock();
+    releaseWakeLock();
     pauseRecording();
     pauseTimer();
     console.info('Recording paused.');
   }
 
   async function handleResumeRecording() {
-    await requestWakeLock();
+    requestWakeLock();
     resumeRecording();
     resumeTimer();
     console.info('Recording resumed.');
   }
 
   async function handleStopRecording() {
-    await releaseWakeLock();
-    stopRecording(handleSubmitRecording);
+    disablePreventPageLeave();
+    releaseWakeLock();
+
     stopTimer();
     setIsRecordingStarted(false);
+    await stopRecording(handleSubmitRecording);
     console.info('Recording stopped.');
   }
 
