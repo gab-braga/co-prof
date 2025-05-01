@@ -26,7 +26,7 @@ export default ({ recording }) => {
               aria-label="Close"
             ></button>
           </div>
-          <div className="modal-body">{recording.transcript}</div>
+          <div className="modal-body" style={{ fontSize:  "0.8rem" }}>{recording.transcript}</div>
           <div className="modal-footer">
             <button
               type="button"

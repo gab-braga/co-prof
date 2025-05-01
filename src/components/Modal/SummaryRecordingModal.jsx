@@ -1,7 +1,11 @@
 import React from 'react';
+import useClipboard from '../../hooks/useClipboard';
 import { formatRecordingTitle } from '../../utils/date';
+import { formatSummaryText } from '../../utils/format';
 
 export default ({ recording }) => {
+  const { copyToClipboard, isCopied } = useClipboard();
+
   return (
     <div
       className="modal fade"
@@ -59,6 +63,13 @@ export default ({ recording }) => {
             >
               <i className="bi bi-x-lg me-2"></i>
               Fechar
+            </button>
+            <button onClick={() => {
+              const text = formatSummaryText(recording.summaryData);
+              copyToClipboard(text);
+            }} type="button" className="btn btn-primary">
+              <i className={`bi bi-${isCopied ? "clipboard-check" : "clipboard"} me-2`}></i>
+              Copiar
             </button>
           </div>
         </div>
