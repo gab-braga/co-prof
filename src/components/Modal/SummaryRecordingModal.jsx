@@ -28,9 +28,7 @@ export default ({ recording }) => {
           </div>
           <div className="modal-body">
             <h2 class="fs-5">Resumo</h2>
-            <p>
-              {recording?.summaryData?.summary}
-            </p>
+            <p dangerouslySetInnerHTML={{__html: recording?.summaryData?.summary }}></p>
             
             <h2 class="fs-5">Marcos</h2>
             <ul>

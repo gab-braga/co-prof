@@ -7,6 +7,7 @@ import TranscriptRecordingModal from '../../components/Modal/TranscriptRecording
 import SummaryRecordingModal from '../../components/Modal/SummaryRecordingModal';
 import { findClass } from '../../services/classService';
 import { findRecordingsByClassId } from '../../services/recordingService';
+import ConfirmDeleteRecordingModal from '../../components/Modal/ConfirmDeleteRecordingModal';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -144,17 +145,7 @@ export default () => {
                                   <button
                                     type="button"
                                     data-bs-toggle="modal"
-                                    data-bs-target={'#update-recording-modal'}
-                                    className="btn dropdown-item"
-                                  >
-                                    Editar
-                                  </button>
-                                  <button
-                                    type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target={
-                                      '#confirm-delete-recording-modal'
-                                    }
+                                    data-bs-target={`#confirm-delete-recording-modal-${recording.id}`}
                                     className="btn dropdown-item"
                                   >
                                     Excluir
@@ -179,6 +170,7 @@ export default () => {
             <ListenRecordingModal recording={recording} />
             <TranscriptRecordingModal recording={recording} />
             <SummaryRecordingModal recording={recording} />
+            <ConfirmDeleteRecordingModal id={recording.id} handleUpdates={loadClass} />
           </div>
         ))}
     </div>

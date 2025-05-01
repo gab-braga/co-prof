@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import toast from 'react-hot-toast';
-import { deleteClass } from '../../services/classService';
+import { deleteRecording } from '../../services/recordingService';
 
 export default ({ id, handleUpdates }) => {
   const modalRef = useRef(null);
@@ -16,13 +16,13 @@ export default ({ id, handleUpdates }) => {
       if (modal) {
         toast.promise(
           async () => {
-            await deleteClass(id);
+            await deleteRecording(id);
             executeUpdates();
             modal.hide();
           },
           {
             loading: 'Carregando...',
-            success: 'Turma excluída.',
+            success: 'Gravação excluída.',
             error: 'Algo deu errado. Tente novamente mais tarde.',
           },
         );
@@ -34,9 +34,9 @@ export default ({ id, handleUpdates }) => {
     <div
       ref={modalRef}
       className="modal fade"
-      id={`confirm-delete-class-modal-${id}`}
+      id={`confirm-delete-recording-modal-${id}`}
       tabIndex="-1"
-      aria-labelledby={`confirm-delete-class-modal-label-${id}`}
+      aria-labelledby={`confirm-delete-recording-modal-label-${id}`}
       aria-hidden="true"
     >
       <div className="modal-dialog">
@@ -44,7 +44,7 @@ export default ({ id, handleUpdates }) => {
           <div className="modal-header">
             <h2
               className="modal-title fs-5"
-              id={`confirm-delete-class-modal-label-${id}`}
+              id={`confirm-delete-recording-modal-label-${id}`}
             >
               Tem certeza que deseja excluir?
             </h2>

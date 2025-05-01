@@ -19,7 +19,16 @@ async function findRecordingsByClassId(id) {
   return response.data;
 }
 
+async function deleteRecording(id) {
+  const token = await firebaseUserToken();
+  const response = await api.delete(`/recordings/${id}`, {
+    headers: { Authorization: token },
+  });
+  return response.data;
+}
+
 export {
   createRecording,
   findRecordingsByClassId,
+  deleteRecording
 };
