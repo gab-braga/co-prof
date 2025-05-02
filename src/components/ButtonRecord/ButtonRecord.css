@@ -22,3 +22,9 @@
 .button-record:focus {
   border: 2px solid #ff5555 !important;
 }
+
+.button-record:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(30%);
+}

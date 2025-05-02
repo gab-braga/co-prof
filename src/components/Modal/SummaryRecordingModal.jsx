@@ -31,24 +31,24 @@ export default ({ recording }) => {
             ></button>
           </div>
           <div className="modal-body">
-            <h2 class="fs-5">Resumo</h2>
+            <h2 className="fs-5">Resumo</h2>
             <p dangerouslySetInnerHTML={{__html: recording?.summaryData?.summary }}></p>
             
-            <h2 class="fs-5">Marcos</h2>
+            <h2 className="fs-5">Marcos</h2>
             <ul>
               {recording?.summaryData?.actionItems?.map((item, index) => (
                   <li key={`${index}-action-item-${recording.id}`}>{item}</li>
               ))}
             </ul>
 
-            <h2 class="fs-5">Conceitos Chave</h2>
+            <h2 className="fs-5">Conceitos Chave</h2>
             <ul>
               {recording?.summaryData?.keyConcepts?.map((item, index) => (
                   <li key={`${index}-action-item-${recording.id}`}>{item}</li>
               ))}
             </ul>
 
-            <h2 class="fs-5">Exemplos</h2>
+            <h2 className="fs-5">Exemplos</h2>
             <ul>
               {recording?.summaryData?.examples?.map((item, index) => (
                   <li key={`${index}-action-item-${recording.id}`}>{item}</li>

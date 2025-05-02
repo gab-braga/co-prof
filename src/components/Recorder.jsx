@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { microphoneMessages } from '../utils/messages';
 import ButtonRecord from './ButtonRecord/ButtonRecord';
 import Timer from './Timer';
@@ -8,8 +8,15 @@ import toast from 'react-hot-toast';
 import useWakeLock from '../hooks/useWakeLock';
 import usePreventPageLeave from '../hooks/usePreventPageLeave';
 
+const RECORDING_TIME_LIMIT = 3600000; // 1h
+
 export default ({ handleSubmitRecording }) => {
+  const [statusIndicator, setStatusIndicator] = useState("Iniciar Gravação");
   const [isRecordingStarted, setIsRecordingStarted] = useState(false);
+  const [isRecordingEnabled, setIsRecordingEnabled] = useState(true);
+  const timeLimitReachedRef = useRef(false);
+  const stoppedRef = useRef(false);
+
   const { enablePreventPageLeave, disablePreventPageLeave } =
     usePreventPageLeave();
   const { requestWakeLock, releaseWakeLock } = useWakeLock();
@@ -43,6 +50,7 @@ export default ({ handleSubmitRecording }) => {
       await startRecording();
       startTimer();
       setIsRecordingStarted(true);
+      setStatusIndicator("Gravando...");
       console.info('Recording started.');
     } catch (error) {
       disablePreventPageLeave();
@@ -69,6 +77,7 @@ export default ({ handleSubmitRecording }) => {
     releaseWakeLock();
     pauseRecording();
     pauseTimer();
+    setStatusIndicator("Pausado");
     console.info('Recording paused.');
   }
 
@@ -76,18 +85,47 @@ export default ({ handleSubmitRecording }) => {
     requestWakeLock();
     resumeRecording();
     resumeTimer();
+    setStatusIndicator("Gravando...");
     console.info('Recording resumed.');
   }
 
   async function handleStopRecording() {
+    stoppedRef.current = true;
+    setIsRecordingEnabled(false);
+    
     disablePreventPageLeave();
     releaseWakeLock();
 
     stopTimer();
     setIsRecordingStarted(false);
     await stopRecording(handleSubmitRecording);
+    setStatusIndicator("Encerrado");
     console.info('Recording stopped.');
   }
+  
+  async function checkAndStopRecordingIfTimeExceeded() {
+    if (time >= RECORDING_TIME_LIMIT) {
+      timeLimitReachedRef.current = true;
+      setIsRecordingEnabled(false);
+      await countdownToStopRecordind();
+      handleStopRecording();
+    }
+  }
+
+  async function countdownToStopRecordind() {
+    const times = 10;
+    for (let sec = times; sec >= 1; sec--) {
+      if (stoppedRef.current) break;
+      setStatusIndicator(`Encerrando em ${sec}s`);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+
+  useEffect(() => {
+    if (!timeLimitReachedRef.current) {
+      checkAndStopRecordingIfTimeExceeded();
+    }
+  }, [time]);
 
   return (
     <div
@@ -96,17 +134,14 @@ export default ({ handleSubmitRecording }) => {
     >
       <div className="w-100 d-flex flex-column gap-2 justify-content-center align-items-center">
         <h3 className="fs-5">
-          {!isRecordingStarted
-            ? 'Iniciar Gravação'
-            : isRecording
-            ? 'Gravando...'
-            : 'Pausado'}
+          {statusIndicator}
         </h3>
         <div className="p-4">
           <ButtonRecord
             onClick={handleToggleRecording}
             isRecording={isRecording}
             pulse={volume}
+            disabled={!isRecordingEnabled}
           />
         </div>
         <div>
