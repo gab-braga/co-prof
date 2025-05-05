@@ -9,7 +9,7 @@ export default ({ id, name, section, className, handleUpdates, ...rest }) => {
       <div className="border border-2 border-primary p-3 rounded">
         <div className="d-flex flex-column" style={{ minHeight: '150px' }}>
           <div className="d-flex justify-content-between align-items-center">
-            <h3 className="fs-5 text-truncate">{name || '...'}</h3>
+            <h3 className="ff-poppins text-truncate fs-5">{name || '...'}</h3>
             <div className="dropdown">
               <button
                 type="type"

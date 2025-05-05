@@ -35,7 +35,7 @@ export default () => {
           style={{ minHeight: '70vh' }}
         >
           <div className="d-flex gap-2 flex-wrap justify-content-between  align-items-start">
-            <h2 className="fs-4">Turmas</h2>
+            <h2 className="ff-poppins fs-5">Turmas</h2>
 
             <div className="d-flex gap-3 flex-wrap">
               <button className="btn btn-secondary text-nowrap">

@@ -109,23 +109,24 @@ export default () => {
           <div className="d-flex gap-2 flex-wrap justify-content-between align-items-start overflow-x-auto">
             <div className="d-flex flex-column">
               <div className="d-flex align-items-center mb-2">
+                <Link to="/classes" className="ff-poppins fs-5">Turmas</Link>
+                <i
+                  className="bi bi-chevron-double-right mx-2"
+                  style={{ color: '#8a8a8a' }}
+                ></i>
                 <h2
-                  className="fs-4 text-truncate m-0"
+                  className="ff-poppins text-truncate fs-5 m-0"
                   style={{ maxWidth: '30ch' }}
                 >
                   {classData?.name || 'Carregando...'}
+
+                  {classData?.section && (
+                    <span className="ff-roboto text-secondary text-truncate fw-normal fs-6">
+                      {" (" + classData.section + ")"}
+                    </span>
+                  )}
                 </h2>
-                <i
-                  className="bi bi-chevron-double-left ms-3 me-2"
-                  style={{ color: '#8a8a8a' }}
-                ></i>
-                <Link to="/classes">Turmas</Link>
               </div>
-              {classData?.section && (
-                <span className="text-secondary text-truncate">
-                  {classData.section}
-                </span>
-              )}
             </div>
 
             <div className="d-flex gap-3 flex-wrap">
