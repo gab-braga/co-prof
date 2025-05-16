@@ -10,6 +10,7 @@ import Account from './pages/Panel/Account';
 import ClassesPanel from './pages/Panel/ClassesPanel';
 import ClassPanel from './pages/Panel/ClassPanel';
 import RecordingPanel from './pages/Panel/RecordingPanel';
+import Authorization from './pages/Authorization';
 
 export default () => {
   return (
@@ -25,6 +26,7 @@ export default () => {
             <Route path="/classes" element={<ClassesPanel />} />
             <Route path="/classes/:id" element={<ClassPanel />} />
             <Route path="/classes/:id/recording" element={<RecordingPanel />} />
+            <Route path="/authorization" element={<Authorization />} />
           </Route>
         </Routes>
       </BrowserRouter>

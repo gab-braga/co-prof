@@ -21,6 +21,16 @@ export default () => {
     }
   }
 
+  async function handleImportClasses() {
+    try {
+      const url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=509264289385-ghng06ld79ith85khod9j9ot6v9njb69.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fco-prof-5f18e.web.app/authorization&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fclassroom.courses.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fclassroom.coursework.students%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fclassroom.rosters.readonly&access_type=offline&prompt=consent";
+      const data = window.open(url, "Auth", "width=1000,height=500");
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
     loadClasses();
   }, []);
@@ -38,7 +48,7 @@ export default () => {
             <h2 className="ff-poppins fs-5">Turmas</h2>
 
             <div className="d-flex gap-3 flex-wrap">
-              <button className="btn btn-secondary text-nowrap">
+              <button onClick={handleImportClasses} className="btn btn-secondary text-nowrap">
                 <i className="bi bi-arrow-bar-down me-2"></i>
                 Importar Turmas
               </button>
