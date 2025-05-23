@@ -4,9 +4,7 @@ import { firebaseUserToken } from '../firebase/auth';
 async function createRecording(data) {
   const token = await firebaseUserToken();
   const response = await api.post('/recordings', data, {
-    headers: {
-      Authorization: token,
-    },
+    headers: { Authorization: token },
   });
   return response.data;
 }

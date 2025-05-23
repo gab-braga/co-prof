@@ -22,9 +22,9 @@ export default () => {
     }
   }
 
-  async function handleImportClasses() {
-    const authUrl = getGoogleClassroomAuthUrl();
-    window.location.href = authUrl;
+  async function requestGoogleAuthCode() {
+    const gooelAuthUrl = getGoogleClassroomAuthUrl();
+    window.location.href = gooelAuthUrl;
   }
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default () => {
             <h2 className="ff-poppins fs-5">Turmas</h2>
 
             <div className="d-flex gap-3 flex-wrap">
-              <button onClick={handleImportClasses} className="btn btn-secondary text-nowrap">
+              <button onClick={requestGoogleAuthCode} className="btn btn-secondary text-nowrap">
                 <i className="bi bi-arrow-bar-down me-2"></i>
                 Importar Turmas
               </button>
