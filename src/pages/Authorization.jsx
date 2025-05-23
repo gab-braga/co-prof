@@ -1,22 +1,50 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  useEffect(() => {
+  function handleToAuthorization() {
     const searchParams = new URLSearchParams(location.search);
     const code = searchParams.get('code');
     const error = searchParams.get('error');
 
     if (error) {
-        console.error(error)
+      console.error(error);
+    } else if (code) {
+      console.log(code)
+      setTimeout(async () => {
+        await exchangeCode(code);
+        navigate("/classes");
+      }, 500);
+    } else {
+      navigate("/");
     }
+  }
 
-    if (code) {
-        console.log(code)
+  async function exchangeCode(code) {
+    try {
+      const url = "";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code })
+      });
+      const data = await response.json();
+      console.log(data);
+      
+      const token = code;
+      localStorage.setItem("google_classroom_token", token);
+    } catch (error) {
+      console.error(error);
     }
+  }
+
+  useEffect(() => {
+    handleToAuthorization();
   }, [location]);
+
 
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>

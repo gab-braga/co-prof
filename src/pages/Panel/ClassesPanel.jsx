@@ -3,6 +3,7 @@ import PanelHeader from '../../components/PanelHeader';
 import ClassCard from '../../components/ClassCard';
 import CreateClassModal from '../../components/Modal/CreateClassModal';
 import { findAllClasses } from '../../services/classService';
+import { getGoogleClassroomAuthUrl } from '../../services/googleService';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,13 +23,8 @@ export default () => {
   }
 
   async function handleImportClasses() {
-    try {
-      const url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=509264289385-ghng06ld79ith85khod9j9ot6v9njb69.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fco-prof-5f18e.web.app/authorization&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fclassroom.courses.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fclassroom.coursework.students%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fclassroom.rosters.readonly&access_type=offline&prompt=consent";
-      const data = window.open(url, "Auth", "width=1000,height=500");
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
+    const authUrl = getGoogleClassroomAuthUrl();
+    window.location.href = authUrl;
   }
 
   useEffect(() => {
